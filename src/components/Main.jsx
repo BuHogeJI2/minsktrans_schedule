@@ -3,7 +3,7 @@ import Map from "./map/Map";
 import css from './Main.module.css'
 
 const MAP_API_KEY = 'AIzaSyCDEmqfw0DMVYSqCnoSnNKb3b8tABnhs9A'
-const MAP_URL = `https://maps.googleapis.com/maps/api/js?key=${MAP_API_KEY}&v=3.exp&libraries=geometry,drawing,places`
+const MAP_URL = `https://maps.googleapis.com/maps/api/js?key=${MAP_API_KEY}&callback=initMap`
 
 const Main = (props) => {
     return (

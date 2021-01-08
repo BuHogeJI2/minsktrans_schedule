@@ -1,8 +1,5 @@
 .map_wrapper {
-    margin: 10px auto;
-    box-shadow: 0 0 20px black;
-    height: 500px;
-    width: 500px;
+    height: 100vh;
 }
 
 .container_element {
