@@ -3,6 +3,7 @@
 ##### Features:
     - grouping markers when zooming;
     - show stop's info when clicking on it; 
+    - changed map style;
 
 ###### Bugs:
     - excess small InfoWindow at first click on marker (it still there, but hidden

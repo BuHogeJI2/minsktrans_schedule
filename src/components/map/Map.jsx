@@ -1,6 +1,8 @@
 import React, {useEffect, useState} from 'react'
 import {GoogleMap, withGoogleMap, withScriptjs, Marker, InfoWindow} from "react-google-maps";
 import MarkerClusterer from "react-google-maps/lib/components/addons/MarkerClusterer";
+import stopIcon from '../../assets/image/stop_icon.png'
+import mapStyle from "./mapStyle";
 
 const MINSK_COORDS = {lat: 53.904541, lng: 27.561523}
 
@@ -29,7 +31,8 @@ const Map = withScriptjs(withGoogleMap((props) => {
             }
 
             return <Marker position={stopCoords}
-                           onClick={ () => setCurrentStopData(stopName, stopCoords) }
+                           onClick={() => setCurrentStopData(stopName, stopCoords)}
+                           icon={{url: stopIcon, scaledSize: new window.google.maps.Size(50, 50)}}
             />
         }
     }
@@ -46,20 +49,22 @@ const Map = withScriptjs(withGoogleMap((props) => {
     }, [])
 
     return (
-        <GoogleMap defaultZoom={5} defaultCenter={MINSK_COORDS}>
+        <GoogleMap defaultZoom={5}
+                   defaultOptions={{styles: mapStyle}}
+                   defaultCenter={MINSK_COORDS}>
             <MarkerClusterer averageCenter
                              maxZoom={18}
                              minimumClusterSize={4}
                              enableRetinaIcons
-                             gridSize={60} >
+                             gridSize={60}>
                 {getStopsData(stopsTxt).map(data => returnMarker(data))}
             </MarkerClusterer>
             {currentStop &&
-                <InfoWindow position={ currentStop.stopCoords }
-                            onCloseClick={ ()=> setCurrentStop(null) }
-                            defaultZIndex={1}>
-                    <h3>{currentStop.stopName ? currentStop.stopName : 'Без названия'}</h3>
-                </InfoWindow>
+            <InfoWindow position={currentStop.stopCoords}
+                        onCloseClick={() => setCurrentStop(null)}
+                        defaultZIndex={1}>
+                <h3>{currentStop.stopName ? currentStop.stopName : 'Без названия'}</h3>
+            </InfoWindow>
             }
         </GoogleMap>
     )
