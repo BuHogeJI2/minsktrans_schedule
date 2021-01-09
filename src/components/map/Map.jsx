@@ -55,10 +55,10 @@ const Map = withScriptjs(withGoogleMap((props) => {
                 {getStopsData(stopsTxt).map(data => returnMarker(data))}
             </MarkerClusterer>
             {currentStop &&
-                <InfoWindow position={ currentStop.stopCoords } onCloseClick={ ()=> setCurrentStop(null) }>
-                    <h3>
-                        {currentStop.stopName ? currentStop.stopName : 'Без названия'}
-                    </h3>
+                <InfoWindow position={ currentStop.stopCoords }
+                            onCloseClick={ ()=> setCurrentStop(null) }
+                            defaultZIndex={1}>
+                    <h3>{currentStop.stopName ? currentStop.stopName : 'Без названия'}</h3>
                 </InfoWindow>
             }
         </GoogleMap>
