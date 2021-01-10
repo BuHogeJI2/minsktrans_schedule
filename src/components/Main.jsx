@@ -2,15 +2,14 @@ import React from 'react'
 import Map from "./map/Map";
 import css from './Main.module.css'
 
-const MAP_API_KEY = 'AIzaSyCYFazmJAZsjpLUmsInPVUOPq3_99ijEiQ'
-const MAP_URL = `https://maps.googleapis.com/maps/api/js?key=${MAP_API_KEY}&callback=initMap`
+const MAP_URL = `https://maps.googleapis.com/maps/api/js?key=${process.env.REACT_APP_API_KEY}&callback=initMap`
 
-const Main = (props) => {
+const Main = () => {
     return (
         <div className={css.map_wrapper}>
             <Map containerElement={<div className={css.container_element} />}
-                 mapElement={<div style={{height: '100%'}}/>}
-                 loadingElement={<div style={{height: '100%'}} />}
+                 mapElement={<div className={css.container_element} />}
+                 loadingElement={<div className={css.container_element} />}
                  googleMapURL={MAP_URL}
             />
         </div>

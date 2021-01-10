@@ -3,71 +3,75 @@ import {GoogleMap, withGoogleMap, withScriptjs, Marker, InfoWindow} from "react-
 import MarkerClusterer from "react-google-maps/lib/components/addons/MarkerClusterer";
 import stopIcon from '../../assets/image/stop_icon.png'
 import mapStyle from "./mapStyle";
+import {
+    CLUSTER,
+    COORD_MEASURE, INFO_WINDOW_Z_INDEX, MAP_ZOOM,
+    MINSK_COORDS,
+    STOP_COORDS_INDEX,
+    STOP_ICON_HEIGHT,
+    STOP_ICON_WIDTH, STOP_INFO_LENGTH,
+    STOP_NAME_INDEX
+} from "../../constants";
+import {fetchStopsInfo} from "../../api";
 
-const MINSK_COORDS = {lat: 53.904541, lng: 27.561523}
+const getStopsData = (stopsTxt) => {
+    const stopsList = []
+    const splitedStops = stopsTxt.split('\n');
 
-const Map = withScriptjs(withGoogleMap((props) => {
+    splitedStops.forEach(stop => {
+        stopsList.push(stop.split(';'))
+    })
 
-    let [stopsTxt, setStopsTxt] = useState('');
-    let [currentStop, setCurrentStop] = useState(null);
+    return stopsList;
+}
 
-    const getStopsData = (data) => {
-        const result = []
-        const dataArray = data.split('\n');
+const Map = () => {
 
-        dataArray.forEach(data => {
-            result.push(data.split(';'))
-        })
+    const [stopsTxt, setStopsTxt] = useState('');
+    const [currentStop, setCurrentStop] = useState(null);
 
-        return result;
-    }
-
-    const returnMarker = (data) => {
-        if (data.length === 10) {
-            const stopName = data[4];
+    const renderMarker = (stopInfo) => {
+        if (stopInfo.length === STOP_INFO_LENGTH) {
+            const stopName = stopInfo[STOP_NAME_INDEX];
             const stopCoords = {
-                lat: +data[7] / 100000,
-                lng: +data[6] / 100000
+                lat: +stopInfo[STOP_COORDS_INDEX.lat] / COORD_MEASURE,
+                lng: +stopInfo[STOP_COORDS_INDEX.lng] / COORD_MEASURE
             }
 
             return <Marker position={stopCoords}
                            onClick={() => setCurrentStopData(stopName, stopCoords)}
-                           icon={{url: stopIcon, scaledSize: new window.google.maps.Size(50, 50)}}
+                           icon={{url: stopIcon, scaledSize: new window.google.maps.Size(STOP_ICON_WIDTH, STOP_ICON_HEIGHT)}}
             />
         }
     }
 
-    const setCurrentStopData = (stopName, stopCoords) => {
-        const stopData = {stopCoords, stopName};
-        setCurrentStop(stopData);
-    }
+    const setCurrentStopData = (stopName, stopCoords) => setCurrentStop({stopCoords, stopName})
 
     useEffect(() => {
-        fetch('stops.txt')
-            .then(response => response.text())
-            .then(result => setStopsTxt(result))
+        const fileName = 'stops.txt';
+        fetchStopsInfo(fileName, setStopsTxt)
     }, [])
 
     return (
-        <GoogleMap defaultZoom={5}
+        <GoogleMap defaultZoom={MAP_ZOOM}
                    defaultOptions={{styles: mapStyle}}
                    defaultCenter={MINSK_COORDS}>
             <MarkerClusterer averageCenter
-                             maxZoom={18}
-                             minimumClusterSize={4}
+                             maxZoom={CLUSTER.maxZoom}
+                             minimumClusterSize={CLUSTER.minimumSize}
                              enableRetinaIcons
-                             gridSize={60}>
-                {getStopsData(stopsTxt).map(data => returnMarker(data))}
+                             gridSize={CLUSTER.gridSize}>
+                {getStopsData(stopsTxt).map(stopInfo => renderMarker(stopInfo))}
             </MarkerClusterer>
             {currentStop &&
             <InfoWindow position={currentStop.stopCoords}
                         onCloseClick={() => setCurrentStop(null)}
-                        defaultZIndex={1}>
-                <h3>{currentStop.stopName ? currentStop.stopName : 'Без названия'}</h3>
+                        defaultZIndex={INFO_WINDOW_Z_INDEX}>
+                <h3>{currentStop.stopName || 'Без названия'}</h3>
             </InfoWindow>
             }
         </GoogleMap>
     )
-}))
+}
 
-export default Map;
+export default withScriptjs(withGoogleMap(Map));
