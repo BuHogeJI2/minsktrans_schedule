@@ -1,3 +1,4 @@
+export const MAP_URL = `https://maps.googleapis.com/maps/api/js?key=${process.env.REACT_APP_API_KEY}&callback=initMap`
 export const MINSK_COORDS = {lat: 53.904541, lng: 27.561523};
 export const STOP_NAME_INDEX = 4;
 export const STOP_COORDS_INDEX = {
@@ -15,3 +16,7 @@ export const CLUSTER = {
 }
 export const INFO_WINDOW_Z_INDEX = 1;
 export const STOP_INFO_LENGTH = 10;
+
+export const STOPS_FILE_NAME = 'stops.txt';
+export const ROUTES_FILE_NAME = 'routes.txt';
+

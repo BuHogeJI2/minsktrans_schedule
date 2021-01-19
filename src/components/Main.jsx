@@ -1,8 +1,7 @@
 import React from 'react'
 import Map from "./map/Map";
 import css from './Main.module.css'
-
-const MAP_URL = `https://maps.googleapis.com/maps/api/js?key=${process.env.REACT_APP_API_KEY}&callback=initMap`
+import {MAP_URL} from "../constants";
 
 const Main = () => {
     return (

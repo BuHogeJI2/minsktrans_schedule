@@ -1,76 +1,72 @@
-import React, {useEffect, useState} from 'react'
-import {GoogleMap, withGoogleMap, withScriptjs, Marker, InfoWindow} from "react-google-maps";
+import React, {useCallback, useEffect, useState} from 'react'
+import {GoogleMap, withGoogleMap, withScriptjs, InfoWindow, DirectionsRenderer} from "react-google-maps";
 import MarkerClusterer from "react-google-maps/lib/components/addons/MarkerClusterer";
-import stopIcon from '../../assets/image/stop_icon.png'
 import mapStyle from "./mapStyle";
-import {
-    CLUSTER,
-    COORD_MEASURE, INFO_WINDOW_Z_INDEX, MAP_ZOOM,
-    MINSK_COORDS,
-    STOP_COORDS_INDEX,
-    STOP_ICON_HEIGHT,
-    STOP_ICON_WIDTH, STOP_INFO_LENGTH,
-    STOP_NAME_INDEX
-} from "../../constants";
-import {fetchStopsInfo} from "../../api";
-
-const getStopsData = (stopsTxt) => {
-    const stopsList = []
-    const splitedStops = stopsTxt.split('\n');
-
-    splitedStops.forEach(stop => {
-        stopsList.push(stop.split(';'))
-    })
-
-    return stopsList;
-}
+import {CLUSTER, INFO_WINDOW_Z_INDEX, MAP_ZOOM, MINSK_COORDS, ROUTES_FILE_NAME, STOPS_FILE_NAME} from "../../constants";
+import {fetchInfo} from "../../api";
+import {getDataList, renderMarker, setDirectionsData, showSearchForm} from "../../functions";
+import css from "../Main.module.css";
+import SearchForm from "../SearchForm/SearchForm";
 
 const Map = () => {
 
     const [stopsTxt, setStopsTxt] = useState('');
     const [currentStop, setCurrentStop] = useState(null);
+    const [routesTxt, setRoutesTxt] = useState('');
+    const [directions, setDirections] = useState('');
+    const [searchRequest, setSearchRequest] = useState('');
 
-    const renderMarker = (stopInfo) => {
-        if (stopInfo.length === STOP_INFO_LENGTH) {
-            const stopName = stopInfo[STOP_NAME_INDEX];
-            const stopCoords = {
-                lat: +stopInfo[STOP_COORDS_INDEX.lat] / COORD_MEASURE,
-                lng: +stopInfo[STOP_COORDS_INDEX.lng] / COORD_MEASURE
+    const handleKeyPress = useCallback(event => {
+        if (event.charCode === 70) {
+            let modalForm = document.querySelector('#modal_form_wrapper');
+            modalForm.style.display = 'block';
+
+            window.onclick = (event) => {
+                if (event.target === modalForm) {
+                    modalForm.style.display = 'none';
+                }
             }
-
-            return <Marker position={stopCoords}
-                           onClick={() => setCurrentStopData(stopName, stopCoords)}
-                           icon={{url: stopIcon, scaledSize: new window.google.maps.Size(STOP_ICON_WIDTH, STOP_ICON_HEIGHT)}}
-            />
         }
-    }
-
-    const setCurrentStopData = (stopName, stopCoords) => setCurrentStop({stopCoords, stopName})
-
-    useEffect(() => {
-        const fileName = 'stops.txt';
-        fetchStopsInfo(fileName, setStopsTxt)
     }, [])
 
+    useEffect(() => {
+        fetchInfo(STOPS_FILE_NAME, setStopsTxt);
+        fetchInfo(ROUTES_FILE_NAME, setRoutesTxt);
+
+        setDirectionsData(setDirections);
+    }, [])
+
+    useEffect(() => {
+        window.addEventListener('keypress', handleKeyPress);
+        return () => window.removeEventListener('keypress', handleKeyPress);
+    }, [handleKeyPress])
+
     return (
-        <GoogleMap defaultZoom={MAP_ZOOM}
-                   defaultOptions={{styles: mapStyle}}
-                   defaultCenter={MINSK_COORDS}>
-            <MarkerClusterer averageCenter
-                             maxZoom={CLUSTER.maxZoom}
-                             minimumClusterSize={CLUSTER.minimumSize}
-                             enableRetinaIcons
-                             gridSize={CLUSTER.gridSize}>
-                {getStopsData(stopsTxt).map(stopInfo => renderMarker(stopInfo))}
-            </MarkerClusterer>
-            {currentStop &&
-            <InfoWindow position={currentStop.stopCoords}
-                        onCloseClick={() => setCurrentStop(null)}
-                        defaultZIndex={INFO_WINDOW_Z_INDEX}>
-                <h3>{currentStop.stopName || 'Без названия'}</h3>
-            </InfoWindow>
-            }
-        </GoogleMap>
+        <div>
+            <GoogleMap defaultZoom={MAP_ZOOM}
+                       defaultOptions={{styles: mapStyle}}
+                       defaultCenter={MINSK_COORDS}>
+                <MarkerClusterer averageCenter
+                                 maxZoom={CLUSTER.maxZoom}
+                                 minimumClusterSize={CLUSTER.minimumSize}
+                                 enableRetinaIcons
+                                 gridSize={CLUSTER.gridSize}>
+                    {getDataList(stopsTxt).map(stopInfo => renderMarker(stopInfo, setCurrentStop))}
+                </MarkerClusterer>
+                {currentStop &&
+                <InfoWindow position={currentStop.stopCoords}
+                            onCloseClick={() => setCurrentStop(null)}
+                            defaultZIndex={INFO_WINDOW_Z_INDEX}>
+                    <h3>{currentStop.stopName || 'Без названия'}</h3>
+                </InfoWindow>
+                }
+                {directions && <DirectionsRenderer directions={directions}/>}
+                {console.log(getDataList(routesTxt))}
+                {console.log(getDataList(stopsTxt))}
+            </GoogleMap>
+            <SearchForm setSearchRequest={setSearchRequest}/>
+            {console.log(searchRequest)}
+        </div>
     )
 }
 
