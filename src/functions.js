@@ -55,3 +55,17 @@ export const setDirectionsData = (setDirections) => {
         }
     })
 }
+
+export const getSearchingRoutes = (request, routesTxt) => {
+    const routes = getDataList(routesTxt);
+    let searchingRoutes = [];
+    routes.forEach(route => {
+        let routeName = route[10];
+        if (routeName) {
+            if (routeName.includes(request)) {
+                searchingRoutes.push(route)
+            }
+        }
+    })
+    return searchingRoutes;
+}

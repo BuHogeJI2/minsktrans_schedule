@@ -4,17 +4,15 @@ import MarkerClusterer from "react-google-maps/lib/components/addons/MarkerClust
 import mapStyle from "./mapStyle";
 import {CLUSTER, INFO_WINDOW_Z_INDEX, MAP_ZOOM, MINSK_COORDS, ROUTES_FILE_NAME, STOPS_FILE_NAME} from "../../constants";
 import {fetchInfo} from "../../api";
-import {getDataList, renderMarker, setDirectionsData, showSearchForm} from "../../functions";
-import css from "../Main.module.css";
+import {getDataList, renderMarker, setDirectionsData} from "../../functions";
 import SearchForm from "../SearchForm/SearchForm";
 
 const Map = () => {
 
     const [stopsTxt, setStopsTxt] = useState('');
-    const [currentStop, setCurrentStop] = useState(null);
     const [routesTxt, setRoutesTxt] = useState('');
+    const [currentStop, setCurrentStop] = useState(null);
     const [directions, setDirections] = useState('');
-    const [searchRequest, setSearchRequest] = useState('');
 
     const handleKeyPress = useCallback(event => {
         if (event.charCode === 70) {
@@ -60,12 +58,9 @@ const Map = () => {
                     <h3>{currentStop.stopName || 'Без названия'}</h3>
                 </InfoWindow>
                 }
-                {directions && <DirectionsRenderer directions={directions}/>}
-                {console.log(getDataList(routesTxt))}
-                {console.log(getDataList(stopsTxt))}
+                {/*{directions && <DirectionsRenderer directions={directions}/>}*/}
             </GoogleMap>
-            <SearchForm setSearchRequest={setSearchRequest}/>
-            {console.log(searchRequest)}
+            <SearchForm routesTxt={routesTxt}/>
         </div>
     )
 }
