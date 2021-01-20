@@ -1,8 +1,13 @@
 import React, {useState} from 'react'
 import css from "./Form.module.css";
-import {getSearchingRoutes} from "../../functions";
+import {
+    getDirectionData,
+    getSearchingRoutes,
+    setDirectionsData
+} from "../../functions";
+import {ROUTE_NAME_INDEX} from "../../constants";
 
-const  SearchForm = ({routesTxt}) => {
+const  SearchForm = ({stopsTxt, routesTxt, setDirections}) => {
 
     const [inputValue, setInputValue] = useState('');
     const [routes, setRoutes] = useState(null);
@@ -18,7 +23,8 @@ const  SearchForm = ({routesTxt}) => {
     }
 
     const handleRouteClick = (route) => {
-        console.log(route)
+        const directionData = getDirectionData(route, stopsTxt);
+        setDirectionsData(directionData, setDirections);
     }
 
     return (
@@ -28,7 +34,10 @@ const  SearchForm = ({routesTxt}) => {
                 <button>Поиск</button>
                 {routes &&
                     routes.map(route => {
-                        return <div className={css.route} onClick={() => handleRouteClick(route)}>{route[10]}</div>
+                        return <div className={css.route}
+                                    onClick={() => handleRouteClick(route)}>
+                            {route[ROUTE_NAME_INDEX]}
+                        </div>
                     })
                 }
             </form>

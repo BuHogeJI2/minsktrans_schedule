@@ -4,7 +4,7 @@ import MarkerClusterer from "react-google-maps/lib/components/addons/MarkerClust
 import mapStyle from "./mapStyle";
 import {CLUSTER, INFO_WINDOW_Z_INDEX, MAP_ZOOM, MINSK_COORDS, ROUTES_FILE_NAME, STOPS_FILE_NAME} from "../../constants";
 import {fetchInfo} from "../../api";
-import {getDataList, renderMarker, setDirectionsData} from "../../functions";
+import {splitData, renderMarker} from "../../functions";
 import SearchForm from "../SearchForm/SearchForm";
 
 const Map = () => {
@@ -16,7 +16,7 @@ const Map = () => {
 
     const handleKeyPress = useCallback(event => {
         if (event.charCode === 70) {
-            let modalForm = document.querySelector('#modal_form_wrapper');
+            const modalForm = document.querySelector('#modal_form_wrapper');
             modalForm.style.display = 'block';
 
             window.onclick = (event) => {
@@ -30,8 +30,6 @@ const Map = () => {
     useEffect(() => {
         fetchInfo(STOPS_FILE_NAME, setStopsTxt);
         fetchInfo(ROUTES_FILE_NAME, setRoutesTxt);
-
-        setDirectionsData(setDirections);
     }, [])
 
     useEffect(() => {
@@ -49,7 +47,7 @@ const Map = () => {
                                  minimumClusterSize={CLUSTER.minimumSize}
                                  enableRetinaIcons
                                  gridSize={CLUSTER.gridSize}>
-                    {getDataList(stopsTxt).map(stopInfo => renderMarker(stopInfo, setCurrentStop))}
+                    {splitData(stopsTxt).map(stopInfo => renderMarker(stopInfo, setCurrentStop))}
                 </MarkerClusterer>
                 {currentStop &&
                 <InfoWindow position={currentStop.stopCoords}
@@ -58,9 +56,9 @@ const Map = () => {
                     <h3>{currentStop.stopName || 'Без названия'}</h3>
                 </InfoWindow>
                 }
-                {/*{directions && <DirectionsRenderer directions={directions}/>}*/}
+                {directions && <DirectionsRenderer directions={directions}/>}
             </GoogleMap>
-            <SearchForm routesTxt={routesTxt}/>
+            <SearchForm stopsTxt={stopsTxt} routesTxt={routesTxt} setDirections={setDirections}/>
         </div>
     )
 }
