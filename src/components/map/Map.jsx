@@ -50,7 +50,7 @@ const Map = () => {
                     {splitData(stopsTxt).map(stopInfo => renderMarker(stopInfo, setCurrentStop))}
                 </MarkerClusterer>
                 {currentStop &&
-                <InfoWindow position={currentStop.stopCoords}
+                <InfoWindow position={currentStop.stopCoords} // очень медленно работает, почему?
                             onCloseClick={() => setCurrentStop(null)}
                             defaultZIndex={INFO_WINDOW_Z_INDEX}>
                     <h3>{currentStop.stopName || 'Без названия'}</h3>

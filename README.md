@@ -13,5 +13,4 @@
 ###### Bugs:
     - excess small InfoWindow at first click on marker (it still there, but hidden
     under needed InfoWindow);
-    - don't hide modal form after drawing route;
     - don't hide old route after draw new;

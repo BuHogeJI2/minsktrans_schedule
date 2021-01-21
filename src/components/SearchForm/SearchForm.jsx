@@ -25,6 +25,8 @@ const  SearchForm = ({stopsTxt, routesTxt, setDirections}) => {
     const handleRouteClick = (route) => {
         const directionData = getDirectionData(route, stopsTxt);
         setDirectionsData(directionData, setDirections);
+        const modalForm = document.querySelector('#modal_form_wrapper');
+        modalForm.style.display = 'none';
     }
 
     return (
