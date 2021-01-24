@@ -1,7 +1,21 @@
-import React from 'react'
+import React, {useCallback, useEffect} from 'react'
 import css from './Button.module.css'
 
 const OpenSearchFormButton = (props) => {
+
+    const handleClick = useCallback(event => {
+        const modalForm = document.querySelector('#modal_form_wrapper');
+        window.onclick = (event) => {
+            if (event.target === modalForm) {
+                modalForm.style.display = 'none';
+            }
+        }
+    }, [])
+
+    useEffect(() => {
+        window.addEventListener('click', handleClick);
+        return () => window.removeEventListener('click', handleClick);
+    }, [handleClick])
 
     const showModalForm = () => {
         const modalForm = document.querySelector('#modal_form_wrapper');

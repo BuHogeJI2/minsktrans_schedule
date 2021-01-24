@@ -14,7 +14,7 @@ const  SearchForm = ({stopsTxt, routesTxt, setDirections}) => {
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        const searchingRoutes = getSearchingRoutes(inputValue, routesTxt);
+        const searchingRoutes = getSearchingRoutes(inputValue, routesTxt, stopsTxt);
         setRoutes(searchingRoutes);
     }
 

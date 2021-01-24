@@ -32,13 +32,33 @@ export const renderMarker = (stopInfo, setCurrentStop) => {
     }
 }
 
-export const getSearchingRoutes = (request, routesTxt) => {
+export const getSearchingRoutes = (request, routesTxt, stopsTxt) => {
     const routes = splitData(routesTxt);
     let searchingRoutes = [];
     routes.forEach(route => {
         let routeName = route[ROUTE_NAME_INDEX];
-        routeName && routeName.includes(request) && searchingRoutes.push(route); // а если нет названия, как у Вокзала?
+        if (routeName !== 'RouteName') {
+            routeName && routeName.includes(request) && searchingRoutes.push(route);
+        }
     })
+
+    if (!searchingRoutes.length) {
+        const stops = splitData(stopsTxt);
+        stops.forEach(stop => {
+            if (stop[STOP_NAME_INDEX]) {
+                if (stop[STOP_NAME_INDEX].includes(request)) {
+                    routes.forEach(route => {
+                        if (route[ROUTE_STOPS_ID_INDEX]) {
+                            if (route[ROUTE_STOPS_ID_INDEX].includes(stop[STOP_ID_INDEX])) {
+                                searchingRoutes.push(route)
+                            }
+                        }
+                    })
+                }
+            }
+        })
+    }
+
     return searchingRoutes;
 }
 
