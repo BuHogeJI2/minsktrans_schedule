@@ -6,6 +6,7 @@ import {CLUSTER, INFO_WINDOW_Z_INDEX, MAP_ZOOM, MINSK_COORDS, ROUTES_FILE_NAME, 
 import {fetchInfo} from "../../api";
 import {splitData, renderMarker} from "../../functions";
 import SearchForm from "../SearchForm/SearchForm";
+import OpenSearchFormButton from "../buttons/OpenSearchFormButton";
 
 const Map = () => {
 
@@ -39,6 +40,7 @@ const Map = () => {
 
     return (
         <div>
+            <OpenSearchFormButton />
             <GoogleMap defaultZoom={MAP_ZOOM}
                        defaultOptions={{styles: mapStyle}}
                        defaultCenter={MINSK_COORDS}>

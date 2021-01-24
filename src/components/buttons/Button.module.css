@@ -1,0 +1,12 @@
+.search_route_btn_wrapper {
+    position: fixed;
+    top: 60px;
+    left: 10px;
+}
+
+.btn {
+    padding: 10px;
+    background: white;
+    border: 1px solid lightgrey;
+    font-size: 16px;
+}
