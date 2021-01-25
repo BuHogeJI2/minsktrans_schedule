@@ -1,7 +1,7 @@
 import React, {useCallback, useEffect} from 'react'
 import css from './Button.module.css'
 
-const OpenSearchFormButton = (props) => {
+const OpenSearchFormButton = () => {
 
     const handleClick = useCallback(event => {
         const modalForm = document.querySelector('#modal_form_wrapper');

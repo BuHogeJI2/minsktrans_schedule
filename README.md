@@ -6,7 +6,7 @@
 ##### Features:
     - grouping markers when zooming;
     - show stop's info when clicking on it; 
-    - searching route by route name;
+    - searching route by route and stop name;
     - show finded route on map;
     - changed map style;
 

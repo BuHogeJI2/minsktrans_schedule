@@ -1,40 +1,44 @@
+import React from "react";
 import {
-    COORD_MEASURE, ROUTE_NAME_INDEX,
+    COORD_MEASURE,
+    ROUTE_NAME_INDEX,
     ROUTE_STOPS_ID_INDEX,
     STOP_COORDS_INDEX,
-    STOP_ICON_HEIGHT,
-    STOP_ICON_WIDTH,
     STOP_ID_INDEX,
     STOP_INFO_LENGTH,
     STOP_NAME_INDEX
 } from "./constants";
-import {Marker} from "react-google-maps";
-import stopIcon from "./assets/image/stop_icon.png";
-import React from "react";
 
 export const splitData = (file) => {
     const splitedData = file.split('\n');
     return splitedData.map(line => line.split(';'))
 }
 
-export const renderMarker = (stopInfo, setCurrentStop) => {
-    if (stopInfo.length === STOP_INFO_LENGTH) {
-        const stopName = stopInfo[STOP_NAME_INDEX];
-        const stopCoords = {
-            lat: +stopInfo[STOP_COORDS_INDEX.lat] / COORD_MEASURE,
-            lng: +stopInfo[STOP_COORDS_INDEX.lng] / COORD_MEASURE
-        }
+export const getStopMarkerData = (stopsTxt) => {
+    const splitStopsData = splitData(stopsTxt);
 
-        return <Marker position={stopCoords}
-                       onClick={() => setCurrentStop({stopCoords, stopName})}
-                       icon={{url: stopIcon, scaledSize: new window.google.maps.Size(STOP_ICON_WIDTH, STOP_ICON_HEIGHT)}}
-        />
-    }
+    return splitStopsData.map(stopInfo => {
+        if (stopInfo.length === STOP_INFO_LENGTH) {
+            const stopName = stopInfo[STOP_NAME_INDEX];
+            const stopCoords = {
+                lat: +stopInfo[STOP_COORDS_INDEX.lat] / COORD_MEASURE,
+                lng: +stopInfo[STOP_COORDS_INDEX.lng] / COORD_MEASURE
+            }
+            const stopId = stopInfo[STOP_ID_INDEX]
+
+            return {
+                id: stopId,
+                name: stopName,
+                position: stopCoords
+            }
+        }
+    }).filter(item => !!item);
 }
 
 export const getSearchingRoutes = (request, routesTxt, stopsTxt) => {
     const routes = splitData(routesTxt);
     let searchingRoutes = [];
+
     routes.forEach(route => {
         let routeName = route[ROUTE_NAME_INDEX];
         if (routeName !== 'RouteName') {
@@ -45,16 +49,14 @@ export const getSearchingRoutes = (request, routesTxt, stopsTxt) => {
     if (!searchingRoutes.length) {
         const stops = splitData(stopsTxt);
         stops.forEach(stop => {
-            if (stop[STOP_NAME_INDEX]) {
-                if (stop[STOP_NAME_INDEX].includes(request)) {
-                    routes.forEach(route => {
-                        if (route[ROUTE_STOPS_ID_INDEX]) {
-                            if (route[ROUTE_STOPS_ID_INDEX].includes(stop[STOP_ID_INDEX])) {
-                                searchingRoutes.push(route)
-                            }
-                        }
-                    })
-                }
+            const stopName = stop[STOP_NAME_INDEX];
+            if (stopName && stopName.includes(request)) {
+                routes.forEach(route => {
+                    const stopsIdInRoute = route[ROUTE_STOPS_ID_INDEX]
+                    if (stopsIdInRoute && stopsIdInRoute.includes(stop[STOP_ID_INDEX])) {
+                        searchingRoutes.push(route)
+                    }
+                })
             }
         })
     }
@@ -67,7 +69,7 @@ export const getDirectionData = (route, stopsTxt) => {
     const stopsIdInRoute = route[ROUTE_STOPS_ID_INDEX].split(',');
     let stopsInRoute = [];
 
-    stopsIdInRoute.forEach(stopId => {  // двойной цикл, чтобы сохранилась очередь
+    stopsIdInRoute.forEach(stopId => {  // double loop, for save queue;
         stops.forEach(stop => {
             if (stop[STOP_ID_INDEX] === stopId) {
                 stopsInRoute.push(stop);
@@ -75,7 +77,7 @@ export const getDirectionData = (route, stopsTxt) => {
         })
     })
 
-    const waypointsStops = stopsInRoute.slice(1, -2); // кроме первой и последней остановки
+    const waypointsStops = stopsInRoute.slice(1, -2); // except first and last stop;
     let waypointsObjects = waypointsStops.map(stop => {
         return {
             location: {
@@ -94,7 +96,7 @@ export const getDirectionData = (route, stopsTxt) => {
             lat: +stopsInRoute[stopsInRoute.length - 1][STOP_COORDS_INDEX.lat] / COORD_MEASURE,
             lng: +stopsInRoute[stopsInRoute.length - 1][STOP_COORDS_INDEX.lng] / COORD_MEASURE
         },
-        waypoints: [...waypointsObjects]
+        waypoints: waypointsObjects
     }
 }
 
@@ -106,7 +108,7 @@ export const setDirectionsData = (direction, setDirections) => {
         origin: direction.origin,
         destination: direction.destination,
         travelMode: window.google.maps.TravelMode.DRIVING,
-        waypoints: [...direction.waypoints]
+        waypoints: direction.waypoints
     }, (result, status) => {
         if (status === window.google.maps.DirectionsStatus.OK) {
             setDirections(result)

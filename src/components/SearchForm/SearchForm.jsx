@@ -15,6 +15,7 @@ const  SearchForm = ({stopsTxt, routesTxt, setDirections}) => {
     const handleSubmit = (event) => {
         event.preventDefault();
         const searchingRoutes = getSearchingRoutes(inputValue, routesTxt, stopsTxt);
+
         setRoutes(searchingRoutes);
     }
 
@@ -25,6 +26,7 @@ const  SearchForm = ({stopsTxt, routesTxt, setDirections}) => {
     const handleRouteClick = (route) => {
         const directionData = getDirectionData(route, stopsTxt);
         setDirectionsData(directionData, setDirections);
+
         const modalForm = document.querySelector('#modal_form_wrapper');
         modalForm.style.display = 'none';
     }
@@ -36,9 +38,10 @@ const  SearchForm = ({stopsTxt, routesTxt, setDirections}) => {
                 <button>Поиск</button>
                 {routes &&
                     routes.map(route => {
-                        return <div className={css.route}
+                        const routeName = route[ROUTE_NAME_INDEX];
+                        return <div key={routeName} className={css.route}
                                     onClick={() => handleRouteClick(route)}>
-                            {route[ROUTE_NAME_INDEX]}
+                            {routeName}
                         </div>
                     })
                 }

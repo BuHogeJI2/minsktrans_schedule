@@ -15,7 +15,7 @@ export const MAP_ZOOM = 5;
 export const CLUSTER = {
     maxZoom: 18,
     minimumSize: 4,
-    gridSize: 60
+    gridSize: 100
 }
 export const INFO_WINDOW_Z_INDEX = 1;
 export const STOP_INFO_LENGTH = 10;
