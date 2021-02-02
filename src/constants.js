@@ -19,7 +19,9 @@ export const CLUSTER = {
 }
 export const INFO_WINDOW_Z_INDEX = 1;
 export const STOP_INFO_LENGTH = 10;
+export const UPPER_F_CHAR_CODE = 70;
 
 export const STOPS_FILE_NAME = 'stops.txt';
 export const ROUTES_FILE_NAME = 'routes.txt';
+export const TIMES_FILE_NAME = 'times.txt'
 

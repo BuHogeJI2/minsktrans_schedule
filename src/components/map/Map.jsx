@@ -1,27 +1,26 @@
 import React, {useCallback, useEffect, useState} from 'react'
-import {GoogleMap, withGoogleMap, withScriptjs, InfoWindow, DirectionsRenderer} from "react-google-maps";
+import {GoogleMap, withGoogleMap, withScriptjs, DirectionsRenderer} from "react-google-maps";
 import MarkerClusterer from "react-google-maps/lib/components/addons/MarkerClusterer";
 import mapStyle from "./mapStyle";
-import {getStopMarkerData} from "../../functions";
+import {getStopMarkerData, splitData, splitTimes} from "../../functions";
 import SearchForm from "../SearchForm/SearchForm";
 import OpenSearchFormButton from "../buttons/OpenSearchFormButton";
 import Markers from "./Markers";
 import {
     CLUSTER,
-    INFO_WINDOW_Z_INDEX,
     MAP_ZOOM,
-    MINSK_COORDS,
+    MINSK_COORDS, UPPER_F_CHAR_CODE,
 } from "../../constants";
 
 
-const Map = ({stopsTxt, routesTxt}) => {
+const Map = ({stopsTxt, routesTxt, timesTxt}) => {
 
     const [stopsMarkerData, setStopsMarkerData] = useState([]);
     const [currentStop, setCurrentStop] = useState(null);
     const [directions, setDirections] = useState('');
 
     const handleKeyPress = useCallback(event => {
-        if (event.charCode === 70) {
+        if (event.charCode === UPPER_F_CHAR_CODE) {
             const modalForm = document.querySelector('#modal_form_wrapper');
             modalForm.style.display = 'block';
 
@@ -58,17 +57,8 @@ const Map = ({stopsTxt, routesTxt}) => {
                                  minimumClusterSize={CLUSTER.minimumSize}
                                  gridSize={CLUSTER.gridSize}
                 >
-                    <Markers stopsMarkerData={stopsMarkerData} chooseCurrentStop={chooseCurrentStop}/>
+                    <Markers stopsMarkerData={stopsMarkerData} chooseCurrentStop={chooseCurrentStop} currentStop={currentStop}/>
                 </MarkerClusterer>
-                {currentStop &&
-                    <InfoWindow
-                        position={currentStop.position}
-                        onCloseClick={() => chooseCurrentStop(null)}
-                        zIndex={INFO_WINDOW_Z_INDEX}
-                    >
-                        <h3>{currentStop.name || 'Без названия'}</h3>
-                    </InfoWindow>
-                }
                 {directions && <DirectionsRenderer directions={directions}/>}
             </GoogleMap>
             <SearchForm stopsTxt={stopsTxt} routesTxt={routesTxt} setDirections={setDirections}/>
