@@ -57,7 +57,11 @@ const Map = ({stopsTxt, routesTxt, timesTxt}) => {
                                  minimumClusterSize={CLUSTER.minimumSize}
                                  gridSize={CLUSTER.gridSize}
                 >
-                    <Markers stopsMarkerData={stopsMarkerData} chooseCurrentStop={chooseCurrentStop} currentStop={currentStop}/>
+                    <Markers stopsMarkerData={stopsMarkerData}
+                             currentStop={currentStop}
+                             routesTxt={routesTxt}
+                             chooseCurrentStop={chooseCurrentStop}
+                    />
                 </MarkerClusterer>
                 {directions && <DirectionsRenderer directions={directions}/>}
             </GoogleMap>

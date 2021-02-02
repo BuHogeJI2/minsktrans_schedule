@@ -20,16 +20,18 @@ export const getStopMarkerData = (stopsTxt) => {
     return splitStopsData.map(stopInfo => {
         if (stopInfo.length === STOP_INFO_LENGTH) {
             const stopName = stopInfo[STOP_NAME_INDEX];
-            const stopCoords = {
-                lat: +stopInfo[STOP_COORDS_INDEX.lat] / COORD_MEASURE,
-                lng: +stopInfo[STOP_COORDS_INDEX.lng] / COORD_MEASURE
-            }
-            const stopId = stopInfo[STOP_ID_INDEX]
+            if (stopName) {
+                const stopCoords = {
+                    lat: +stopInfo[STOP_COORDS_INDEX.lat] / COORD_MEASURE,
+                    lng: +stopInfo[STOP_COORDS_INDEX.lng] / COORD_MEASURE
+                }
+                const stopId = stopInfo[STOP_ID_INDEX]
 
-            return {
-                id: stopId,
-                name: stopName,
-                position: stopCoords
+                return {
+                    id: stopId,
+                    name: stopName,
+                    position: stopCoords
+                }
             }
         }
     }).filter(item => !!item);
@@ -63,6 +65,22 @@ export const getSearchingRoutes = (request, routesTxt, stopsTxt) => {
 
     return searchingRoutes;
 }
+
+export const getRoutesWithStop = (stop, routesTxt) => {
+    const routes = splitData(routesTxt);
+    let searchingRoutes = [];
+    if (stop.name) {
+        routes.forEach(route => {
+            const routeName = route[ROUTE_NAME_INDEX];
+            const stopsIdInRoute = route[ROUTE_STOPS_ID_INDEX]
+            if (stopsIdInRoute && (stopsIdInRoute.includes(stop.id) || routeName.includes(stop.name))) {
+                searchingRoutes.push(route)
+            }
+        })
+    }
+    return searchingRoutes;
+}
+
 
 export const getDirectionData = (route, stopsTxt) => {
     const stops = splitData(stopsTxt);

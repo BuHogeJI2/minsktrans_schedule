@@ -5,3 +5,14 @@
 .container_element {
     height: 100%;
 }
+
+.routeWithStop {
+    color: red;
+    font-size: 12px;
+    font-weight: normal;
+}
+
+.routeWithStop:hover {
+    text-decoration: underline;
+    cursor: pointer;
+}
