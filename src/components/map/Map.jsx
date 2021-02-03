@@ -2,7 +2,7 @@ import React, {useCallback, useEffect, useState} from 'react'
 import {GoogleMap, withGoogleMap, withScriptjs, DirectionsRenderer} from "react-google-maps";
 import MarkerClusterer from "react-google-maps/lib/components/addons/MarkerClusterer";
 import mapStyle from "./mapStyle";
-import {getStopMarkerData, splitData, splitTimes} from "../../functions";
+import {getStopMarkerData} from "../../functions";
 import SearchForm from "../SearchForm/SearchForm";
 import OpenSearchFormButton from "../buttons/OpenSearchFormButton";
 import Markers from "./Markers";
@@ -60,6 +60,8 @@ const Map = ({stopsTxt, routesTxt, timesTxt}) => {
                     <Markers stopsMarkerData={stopsMarkerData}
                              currentStop={currentStop}
                              routesTxt={routesTxt}
+                             stopsTxt={stopsTxt}
+                             setDirections={setDirections}
                              chooseCurrentStop={chooseCurrentStop}
                     />
                 </MarkerClusterer>
