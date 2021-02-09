@@ -1,43 +1,12 @@
-import React from "react";
 import {
     COORD_MEASURE,
-    ROUTE_ID_INDEX,
     ROUTE_NAME_INDEX,
     ROUTE_STOPS_ID_INDEX,
     STOP_COORDS_INDEX,
     STOP_ID_INDEX,
-    STOP_INFO_LENGTH,
     STOP_NAME_INDEX
-} from "./constants";
-import {decode_times} from "./parser_times";
-
-export const splitData = (file) => {
-    const splitedData = file.split('\n');
-    return splitedData.map(line => line.split(';'))
-}
-
-export const getStopMarkerData = (stopsTxt) => {
-    const splitStopsData = splitData(stopsTxt);
-
-    return splitStopsData.map(stopInfo => {
-        if (stopInfo.length === STOP_INFO_LENGTH) {
-            const stopName = stopInfo[STOP_NAME_INDEX];
-            if (stopName) {
-                const stopCoords = {
-                    lat: +stopInfo[STOP_COORDS_INDEX.lat] / COORD_MEASURE,
-                    lng: +stopInfo[STOP_COORDS_INDEX.lng] / COORD_MEASURE
-                }
-                const stopId = stopInfo[STOP_ID_INDEX]
-
-                return {
-                    id: stopId,
-                    name: stopName,
-                    position: stopCoords
-                }
-            }
-        }
-    }).filter(item => !!item);
-}
+} from "../constants";
+import {splitData} from "./globalLogic";
 
 export const getSearchingRoutes = (request, routesTxt, stopsTxt) => {
     const routes = splitData(routesTxt);
@@ -68,7 +37,7 @@ export const getSearchingRoutes = (request, routesTxt, stopsTxt) => {
     return searchingRoutes;
 }
 
-export const getRoutesWithStop = (stop, routesTxt) => {
+export const getRoutesWithCurrentStop = (stop, routesTxt) => {
     const routes = splitData(routesTxt);
     let searchingRoutes = [];
     if (stop.name) {
@@ -134,72 +103,5 @@ export const setDirectionsData = (direction, setDirections) => {
         } else {
             console.error('Direction Error:', result)
         }
-    })
-}
-
-export const getTimes = (times) => {
-    const splitedTimes = times.split('\n');
-    return splitedTimes.map(timeLine => decode_times(timeLine))
-}
-
-export const getStopNumberInRoutes = (routes, stop) => {
-    return routes.map(route => {
-        const stopsIdInRoute = route[ROUTE_STOPS_ID_INDEX].split(',');
-        const routeId = route[ROUTE_ID_INDEX];
-        return {
-            [routeId]: stopsIdInRoute.indexOf(stop.id)
-        }
-    })
-}
-
-export const getTimesForRoutes = (routes, times) => {
-    const timesForStop = [];
-    routes.forEach(route => {
-        const routeId = route[ROUTE_ID_INDEX];
-        times.forEach(time => {
-            time.direction_id === routeId && timesForStop.push(time);
-        })
-    });
-    return timesForStop;
-}
-
-export const getTimesForStopWithRoute = (stopNumberInRoutes, timesForRoutes) => {
-    let timesForStopWithRoute = {};
-    const routesNumberWithStop = stopNumberInRoutes.length;
-
-    for (let routeNumber = 0; routeNumber < routesNumberWithStop; routeNumber++) {
-        const timesInRoute = timesForRoutes[routeNumber];
-        const routes = stopNumberInRoutes[routeNumber];
-        const routeId = timesInRoute.direction_id;
-        const numberOfStop = routes[routeId];
-        const startTimesForStop = numberOfStop >= 0 && numberOfStop * timesInRoute.workdays.length;
-        const endTimesForStop = startTimesForStop + timesInRoute.workdays.length;
-
-        if (startTimesForStop >= 0) {
-            timesForStopWithRoute[routeId] = timesInRoute.times.slice(startTimesForStop, endTimesForStop);
-        } else {
-            timesForStopWithRoute[routeId] = false;
-        }
-    }
-
-    return timesForStopWithRoute;
-
-}
-
-export const convertMinutesToHours = (timesInMinutes) => {
-
-    return timesInMinutes.map(time => {
-        let hours = Math.floor(time / 60);
-        let minutes = time % 60;
-
-        if (hours >= 24) hours -= 24;
-
-        if (hours < 10 || minutes < 10) {
-            if (hours < 10) hours = `0${hours}`
-            if (minutes < 10) minutes = `0${minutes}`
-        }
-
-        return `${hours}:${minutes}`
-
     })
 }

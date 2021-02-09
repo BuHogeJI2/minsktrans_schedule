@@ -1,8 +1,7 @@
 import React, {useCallback, useEffect, useState} from 'react'
-import {GoogleMap, withGoogleMap, withScriptjs, DirectionsRenderer} from "react-google-maps";
+import {GoogleMap, withGoogleMap, withScriptjs} from "react-google-maps";
 import MarkerClusterer from "react-google-maps/lib/components/addons/MarkerClusterer";
 import mapStyle from "./mapStyle";
-import {getStopMarkerData, getTimes} from "../../functions";
 import SearchForm from "../SearchForm/SearchForm";
 import OpenSearchFormButton from "../buttons/OpenSearchFormButton";
 import Markers from "./Markers";
@@ -12,6 +11,8 @@ import {
     MINSK_COORDS, UPPER_F_CHAR_CODE,
 } from "../../constants";
 import Directions from "./Directions";
+import {getStopMarkerData} from "../../logic/stopsLogic";
+import {getTimes} from "../../logic/timesLogic";
 
 
 const Map = ({stopsTxt, routesTxt, timesTxt}) => {

@@ -1,18 +1,18 @@
-import React, {useRef, useState} from 'react'
+import React, {useState} from 'react'
 import {Marker, InfoWindow} from "react-google-maps";
 import stopIcon from '../../assets/image/stop_icon.png'
 import {ROUTE_ID_INDEX, ROUTE_NAME_INDEX, STOP_ICON_HEIGHT, STOP_ICON_WIDTH} from "../../constants";
+import css from './Map.module.css'
+import {getDirectionData, getRoutesWithCurrentStop, setDirectionsData} from "../../logic/routesLogic";
 import {
     convertMinutesToHours,
-    getDirectionData,
-    getRoutesWithStop, getStopNumberInRoutes,
-    getTimesForRoutes, getTimesForStopWithRoute,
-    setDirectionsData
-} from "../../functions";
-import css from '../Main.module.css'
+    getStopQueueOrderInRoutes,
+    getTimesForRoutes,
+    getTimesForStopWithRoute
+} from "../../logic/timesLogic";
 
 const areEqual = (prevProps, nextProps) => {
-    // return prevProps.stopsMarkerData === nextProps.stopsMarkerData;
+    return prevProps.stopsMarkerData === nextProps.stopsMarkerData && prevProps.currentStop === nextProps.currentStop;
 }
 
 const Markers = React.memo((props) => {
@@ -34,8 +34,8 @@ const Markers = React.memo((props) => {
         setDirectionsData(directionData, props.setDirections);
     }
 
-    const renderRoutesWithStop = (currentStop) => {
-        const routes = getRoutesWithStop(currentStop, props.routesTxt);
+    const showRoutes = (currentStop) => {
+        const routes = getRoutesWithCurrentStop(currentStop, props.routesTxt);
         return routes.map(route => {
             return <div className={css.routeWithStop}>
                 <span className={css.route_name_in_routes} onClick={() => renderDirection(route)}>{route[ROUTE_NAME_INDEX]}</span>
@@ -44,9 +44,9 @@ const Markers = React.memo((props) => {
         })
     }
 
-    const renderTimesWithStop = (currentStop) => {
-        const routesWithStop = getRoutesWithStop(currentStop, props.routesTxt);
-        const stopNumberInRoutes = getStopNumberInRoutes(routesWithStop, currentStop);
+    const showTimes = (currentStop) => {
+        const routesWithStop = getRoutesWithCurrentStop(currentStop, props.routesTxt);
+        const stopNumberInRoutes = getStopQueueOrderInRoutes(routesWithStop, currentStop);
         const timesForRoutes = getTimesForRoutes(routesWithStop, props.times);
         const timesForStop = getTimesForStopWithRoute(stopNumberInRoutes, timesForRoutes);
 
@@ -78,10 +78,11 @@ const Markers = React.memo((props) => {
                                     {currentRoute &&
                                     <span className={css.show_routes} onClick={() => setCurrentRoute(null)}>Показать маршруты</span>}
                                 </h2>
-                                {!currentRoute && renderRoutesWithStop(props.currentStop)}
-                                {currentRoute && renderTimesWithStop(props.currentStop)}
+                                {!currentRoute && showRoutes(props.currentStop)}
+                                {currentRoute && showTimes(props.currentStop)}
                             </div>
-                        </InfoWindow>)}
+                        </InfoWindow>)
+                    }
                 </Marker>
             })}
         </>

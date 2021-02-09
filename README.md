@@ -15,5 +15,6 @@
     - changed map style;
 
 ###### Bugs:
-    - don't hide old route after draw new;
+    - don't show schedule by day of the week;
     - bad optimization in Markers component;
+    - don't hide old route after draw new;

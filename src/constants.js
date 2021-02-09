@@ -25,3 +25,7 @@ export const STOPS_FILE_NAME = 'stops.txt';
 export const ROUTES_FILE_NAME = 'routes.txt';
 export const TIMES_FILE_NAME = 'times.txt'
 
+export const HOUR_IN_MINUTES = 60;
+export const MIDNIGHT = 24;
+export const TWO_DIGIT_NUMBER = 10;
+
