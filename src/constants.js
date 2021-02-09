@@ -8,6 +8,7 @@ export const STOP_COORDS_INDEX = {
 }
 export const ROUTE_STOPS_ID_INDEX = 14;
 export const ROUTE_NAME_INDEX = 10;
+export const ROUTE_ID_INDEX = 12;
 export const STOP_ICON_WIDTH = 15;
 export const STOP_ICON_HEIGHT = 15;
 export const COORD_MEASURE = 100000;
@@ -17,7 +18,6 @@ export const CLUSTER = {
     minimumSize: 4,
     gridSize: 100
 }
-export const INFO_WINDOW_Z_INDEX = 1;
 export const STOP_INFO_LENGTH = 10;
 export const UPPER_F_CHAR_CODE = 70;
 
