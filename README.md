@@ -16,6 +16,4 @@
 
 ###### Bugs:
     - don't hide old route after draw new;
-    - bad optimization in Markers component; 
-    - broken UI at InfoWindow;
-    - when clicking on new stop, not reset to null current route;
+    - bad optimization in Markers component;

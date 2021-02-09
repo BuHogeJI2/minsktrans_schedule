@@ -189,8 +189,16 @@ export const getTimesForStopWithRoute = (stopNumberInRoutes, timesForRoutes) => 
 export const convertMinutesToHours = (timesInMinutes) => {
 
     return timesInMinutes.map(time => {
-        const hours = Math.floor(time / 60);
-        const minutes = time % 60;
+        let hours = Math.floor(time / 60);
+        let minutes = time % 60;
+
+        if (hours >= 24) hours -= 24;
+
+        if (hours < 10 || minutes < 10) {
+            if (hours < 10) hours = `0${hours}`
+            if (minutes < 10) minutes = `0${minutes}`
+        }
+
         return `${hours}:${minutes}`
 
     })
