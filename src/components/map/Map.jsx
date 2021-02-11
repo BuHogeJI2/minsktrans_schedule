@@ -4,7 +4,6 @@ import MarkerClusterer from "react-google-maps/lib/components/addons/MarkerClust
 import mapStyle from "./mapStyle";
 import SearchForm from "../SearchForm/SearchForm";
 import OpenSearchFormButton from "../buttons/OpenSearchFormButton";
-import Markers from "./Markers";
 import {
     CLUSTER,
     MAP_ZOOM,
@@ -13,13 +12,13 @@ import {
 import Directions from "./Directions";
 import {getStopMarkerData} from "../../logic/stopsLogic";
 import {getTimes} from "../../logic/timesLogic";
+import MarkersContainer from "./Markers/MarkersContainer";
 
 
 const Map = ({stopsTxt, routesTxt, timesTxt}) => {
 
     const [stopsMarkerData, setStopsMarkerData] = useState([]);
     const [timesData, setTimesData] = useState(null);
-    const [currentStop, setCurrentStop] = useState(null);
     const [directions, setDirections] = useState('');
 
     const handleKeyPress = useCallback(event => {
@@ -35,10 +34,6 @@ const Map = ({stopsTxt, routesTxt, timesTxt}) => {
         }
     }, [])
 
-    const chooseCurrentStop = (value) => {
-        setCurrentStop(value)
-    }
-
     useEffect(() => {
         setStopsMarkerData(getStopMarkerData(stopsTxt));
         setTimesData(getTimes(timesTxt));
@@ -51,7 +46,7 @@ const Map = ({stopsTxt, routesTxt, timesTxt}) => {
 
     return (
         <div>
-            <OpenSearchFormButton />
+            <OpenSearchFormButton/>
             <GoogleMap defaultZoom={MAP_ZOOM}
                        defaultOptions={{styles: mapStyle}}
                        defaultCenter={MINSK_COORDS}>
@@ -60,13 +55,11 @@ const Map = ({stopsTxt, routesTxt, timesTxt}) => {
                                  maxZoom={CLUSTER.maxZoom}
                                  minimumClusterSize={CLUSTER.minimumSize}
                                  gridSize={CLUSTER.gridSize}>
-                    <Markers stopsMarkerData={stopsMarkerData}
-                             currentStop={currentStop}
-                             routesTxt={routesTxt}
-                             stopsTxt={stopsTxt}
-                             setDirections={setDirections}
-                             times={timesData}
-                             chooseCurrentStop={chooseCurrentStop}/>
+                    <MarkersContainer stopsMarkerData={stopsMarkerData}
+                                      routesTxt={routesTxt}
+                                      stopsTxt={stopsTxt}
+                                      setDirections={setDirections}
+                                      times={timesData}/>
                 </MarkerClusterer>
                 {directions && <Directions directions={directions}/>}
             </GoogleMap>
