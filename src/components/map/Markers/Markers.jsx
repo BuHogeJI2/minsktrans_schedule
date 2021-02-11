@@ -31,6 +31,7 @@ const Markers = React.memo(({setCurrentStop, setCurrentRoute, stopsMarkerData, .
                     <CustomInfoWindow setCurrentRoute={setCurrentRoute}
                                       setCurrentStop={setCurrentStop}
                                       marker={marker}
+                                      setDirections={props.setDirections}
                                       times={props.times}
                                       routesTxt={props.routesTxt}
                                       stopsTxt={props.stopsTxt}/>
