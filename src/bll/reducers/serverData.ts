@@ -5,19 +5,19 @@ const SET_STOPS_TXT = 'serverData/SET_STOPS_TXT';
 const SET_ROUTES_TXT = 'serverData/SET_ROUTES_TXT';
 const SET_TIMES_TXT = 'serverData/SET_TIMES_TXT';
 
-type initialStateType = {
+type serverDataStateType = {
     stopsTxt: string | undefined
     routesTxt: string | undefined
     timesTxt: string | undefined
 }
 
-let initialState: initialStateType = {
+let initialState: serverDataStateType = {
     stopsTxt: '',
     routesTxt: '',
     timesTxt: '',
 }
 
-const serverData = (state: initialStateType = initialState, action: any) => {
+const serverData = (state: serverDataStateType = initialState, action: any) => {
 
     switch (action.type) {
 

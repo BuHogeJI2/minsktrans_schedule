@@ -5,11 +5,18 @@ import {MAP_URL} from "../constants";
 import {connect} from "react-redux";
 import {fetchAllData} from "../bll/reducers/serverData";
 
-const Main = (props) => {
+type mainProps = {
+    stopsTxt: string
+    routesTxt: string
+    timesTxt: string
+    fetchAllData: () => void
+}
+
+const Main: React.FC<mainProps> = (props) => {
 
     useEffect( () => {
         props.fetchAllData();
-    }, [])
+    }, [props])
 
     return (
         <div className={css.map_wrapper}>
@@ -25,7 +32,7 @@ const Main = (props) => {
     )
 }
 
-let mapStateToProps = (state) => {
+let mapStateToProps = (state: any) => {
     return {
         stopsTxt: state.serverData.stopsTxt,
         routesTxt: state.serverData.routesTxt,

@@ -14,12 +14,13 @@ import {getStopMarkerData} from "../../services/stops";
 import {getTimes} from "../../services/times";
 import MarkersContainer from "./Markers/MarkersContainer";
 import Clock from "../clock/Clock";
+import {compose} from "redux";
+import {connect} from "react-redux";
+import {setMarkersData, setTimesData} from "../../bll/reducers/staticData";
 
 
-const Map = ({stopsTxt, routesTxt, timesTxt}) => {
+const Map = ({stopsTxt, routesTxt, timesTxt, ...props}) => {
 
-    const [stopsMarkerData, setStopsMarkerData] = useState([]);
-    const [timesData, setTimesData] = useState(null);
     const [directions, setDirections] = useState('');
 
     const handleKeyPress = useCallback(event => {
@@ -36,8 +37,8 @@ const Map = ({stopsTxt, routesTxt, timesTxt}) => {
     }, [])
 
     useEffect(() => {
-        setStopsMarkerData(getStopMarkerData(stopsTxt));
-        setTimesData(getTimes(timesTxt));
+        props.setMarkersData(getStopMarkerData(stopsTxt));
+        props.setTimesData(getTimes(timesTxt));
     }, [stopsTxt, timesTxt])
 
     useEffect(() => {
@@ -57,11 +58,11 @@ const Map = ({stopsTxt, routesTxt, timesTxt}) => {
                                  maxZoom={CLUSTER.maxZoom}
                                  minimumClusterSize={CLUSTER.minimumSize}
                                  gridSize={CLUSTER.gridSize}>
-                    <MarkersContainer stopsMarkerData={stopsMarkerData}
+                    <MarkersContainer stopsMarkerData={props.markersData}
                                       routesTxt={routesTxt}
                                       stopsTxt={stopsTxt}
                                       setDirections={setDirections}
-                                      times={timesData}/>
+                                      times={props.timesData}/>
                 </MarkerClusterer>
                 {directions && <Directions directions={directions}/>}
             </GoogleMap>
@@ -70,4 +71,14 @@ const Map = ({stopsTxt, routesTxt, timesTxt}) => {
     )
 }
 
-export default withScriptjs(withGoogleMap(Map));
+let mapStateToProps = (state) => {
+    return {
+        markersData: state.staticData.markersData,
+        timesData: state.staticData.timesData,
+    }
+}
+
+export default compose(
+    connect(mapStateToProps, {setMarkersData, setTimesData}),
+    withScriptjs,
+    withGoogleMap)(Map);
