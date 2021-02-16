@@ -4,25 +4,31 @@ import css from './Main.module.css'
 import {MAP_URL} from "../constants";
 import {connect} from "react-redux";
 import {fetchAllData} from "../bll/reducers/serverData";
+import {AppStateType} from "../bll/store";
 
-type mainProps = {
+type MainStatePropsType = {
     stopsTxt: string
     routesTxt: string
     timesTxt: string
+}
+
+type MainDispatchPropsType = {
     fetchAllData: () => void
 }
 
-const Main: React.FC<mainProps> = (props) => {
+type MainPropsType = MainStatePropsType & MainDispatchPropsType;
 
-    useEffect( () => {
+const Main: React.FC<MainPropsType> = (props) => {
+
+    useEffect(() => {
         props.fetchAllData();
     }, [props])
 
     return (
         <div className={css.map_wrapper}>
-            <Map containerElement={<div className={css.container_element} />}
-                 mapElement={<div className={css.container_element} />}
-                 loadingElement={<div className={css.container_element} />}
+            <Map containerElement={<div className={css.container_element}/>}
+                 mapElement={<div className={css.container_element}/>}
+                 loadingElement={<div className={css.container_element}/>}
                  googleMapURL={MAP_URL}
                  stopsTxt={props.stopsTxt}
                  routesTxt={props.routesTxt}
@@ -32,7 +38,7 @@ const Main: React.FC<mainProps> = (props) => {
     )
 }
 
-let mapStateToProps = (state: any) => {
+let mapStateToProps = (state: AppStateType) => {
     return {
         stopsTxt: state.serverData.stopsTxt,
         routesTxt: state.serverData.routesTxt,

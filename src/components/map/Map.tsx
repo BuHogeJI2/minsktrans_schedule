@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from 'react'
+import React, {useCallback, useEffect} from 'react'
 import {GoogleMap, withGoogleMap, withScriptjs} from "react-google-maps";
 import MarkerClusterer from "react-google-maps/lib/components/addons/MarkerClusterer";
 import mapStyle from "./mapStyle";
@@ -14,22 +14,42 @@ import {getStopMarkerData} from "../../services/stops";
 import {getTimes} from "../../services/times";
 import MarkersContainer from "./Markers/MarkersContainer";
 import Clock from "../clock/Clock";
-import {compose} from "redux";
 import {connect} from "react-redux";
-import {setMarkersData, setTimesData} from "../../bll/reducers/staticData";
+import {MarkerType, setMarkersData, setTimesData, TimeDataType} from "../../bll/reducers/staticData";
+import {DirectionType, setDirections} from "../../bll/reducers/dynamicData";
+import {AppStateType} from "../../bll/store";
 
+type MapOwnPropsType = {
+    stopsTxt: string
+    routesTxt: string
+    timesTxt: string
+}
 
-const Map = ({stopsTxt, routesTxt, timesTxt, ...props}) => {
+type MapStatePropsType = {
+    markersData: Array<MarkerType>
+    timesData: Array<TimeDataType>
+    directions: DirectionType
+}
 
-    const [directions, setDirections] = useState('');
+type MapDispatchPropsType = {
+    setMarkersData: (markersData: Array<MarkerType>) => void
+    setTimesData: (timesData: Array<TimeDataType>) => void
+    setDirections: (direction: DirectionType) => void
+}
+
+type MapPropsType = MapOwnPropsType & MapStatePropsType & MapDispatchPropsType;
+
+const Map: React.FC<MapPropsType> = ({stopsTxt, routesTxt, timesTxt, ...props}) => {
 
     const handleKeyPress = useCallback(event => {
         if (event.charCode === UPPER_F_CHAR_CODE) {
             const modalForm = document.querySelector('#modal_form_wrapper');
+            // @ts-ignore
             modalForm.style.display = 'block';
 
-            window.onclick = (event) => {
+            window.onclick = (event: any) => {
                 if (event.target === modalForm) {
+                    // @ts-ignore
                     modalForm.style.display = 'none';
                 }
             }
@@ -48,8 +68,8 @@ const Map = ({stopsTxt, routesTxt, timesTxt, ...props}) => {
 
     return (
         <div>
-            <OpenSearchFormButton />
-            <Clock />
+            <OpenSearchFormButton/>
+            <Clock/>
             <GoogleMap defaultZoom={MAP_ZOOM}
                        defaultOptions={{styles: mapStyle}}
                        defaultCenter={MINSK_COORDS}>
@@ -61,24 +81,25 @@ const Map = ({stopsTxt, routesTxt, timesTxt, ...props}) => {
                     <MarkersContainer stopsMarkerData={props.markersData}
                                       routesTxt={routesTxt}
                                       stopsTxt={stopsTxt}
-                                      setDirections={setDirections}
                                       times={props.timesData}/>
                 </MarkerClusterer>
-                {directions && <Directions directions={directions}/>}
+                {props.directions && <Directions directions={props.directions}/>}
             </GoogleMap>
-            <SearchForm stopsTxt={stopsTxt} routesTxt={routesTxt} setDirections={setDirections}/>
+            <SearchForm stopsTxt={stopsTxt} routesTxt={routesTxt} setDirections={props.setDirections}/>
         </div>
     )
 }
 
-let mapStateToProps = (state) => {
+let mapStateToProps = (state: AppStateType): MapStatePropsType => {
     return {
         markersData: state.staticData.markersData,
         timesData: state.staticData.timesData,
+        directions: state.dynamicData.directions,
     }
 }
 
-export default compose(
-    connect(mapStateToProps, {setMarkersData, setTimesData}),
-    withScriptjs,
-    withGoogleMap)(Map);
+export default connect(mapStateToProps, {
+    setMarkersData,
+    setTimesData,
+    setDirections
+})(withScriptjs(withGoogleMap(Map)));
