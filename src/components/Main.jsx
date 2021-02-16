@@ -1,21 +1,14 @@
-import React, {useEffect, useState} from 'react'
+import React, {useEffect} from 'react'
 import Map from "./map/Map";
 import css from './Main.module.css'
-import {fetchInfo} from "../api";
-import {MAP_URL, ROUTES_FILE_NAME, STOPS_FILE_NAME, TIMES_FILE_NAME} from "../constants";
+import {MAP_URL} from "../constants";
+import {connect} from "react-redux";
+import {fetchAllData} from "../bll/reducers/serverData";
 
-const Main = () => {
-
-    const [stopsTxt, setStopsTxt] = useState('');
-    const [routesTxt, setRoutesTxt] = useState('');
-    const [timesTxt, setTimesTxt] = useState('')
+const Main = (props) => {
 
     useEffect( () => {
-        fetchInfo(STOPS_FILE_NAME, setStopsTxt);
-        fetchInfo(ROUTES_FILE_NAME, setRoutesTxt);
-        fetchInfo(TIMES_FILE_NAME, setTimesTxt);
-
-
+        props.fetchAllData();
     }, [])
 
     return (
@@ -24,13 +17,21 @@ const Main = () => {
                  mapElement={<div className={css.container_element} />}
                  loadingElement={<div className={css.container_element} />}
                  googleMapURL={MAP_URL}
-                 stopsTxt={stopsTxt}
-                 routesTxt={routesTxt}
-                 timesTxt={timesTxt}
+                 stopsTxt={props.stopsTxt}
+                 routesTxt={props.routesTxt}
+                 timesTxt={props.timesTxt}
             />
         </div>
     )
 }
 
-export default Main;
+let mapStateToProps = (state) => {
+    return {
+        stopsTxt: state.serverData.stopsTxt,
+        routesTxt: state.serverData.routesTxt,
+        timesTxt: state.serverData.timesTxt,
+    }
+}
+
+export default connect(mapStateToProps, {fetchAllData})(Main);
 

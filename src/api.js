@@ -1,8 +1,7 @@
-export const fetchInfo = async (fileName, callback) => {
+export const fetchInfo = async (fileName) => {
     try {
         let response = await fetch(fileName);
-        let responseText = await response.text();
-        callback(responseText)
+        return await response.text();
     } catch (error) {
         console.error('ERROR:', error)
     }

@@ -31,12 +31,12 @@
     justify-content: center;
 }
 
-.show_routes {
+.show_routes, .build_route {
     font-size: 12px;
     color: darkblue;
 }
 
-.show_routes:hover {
+.show_routes:hover, .build_route:hover {
     text-decoration: underline;
     cursor: pointer;
 }

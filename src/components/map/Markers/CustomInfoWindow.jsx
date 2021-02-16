@@ -49,15 +49,21 @@ const CustomInfoWindow = ({setCurrentStop, setCurrentRoute, marker, ...props}) =
 
     }
 
+    const buildRoute = (currentStop) => {
+        console.log(currentStop);
+    }
+
     return <>
         {currentStop && currentStop.id === marker.id && (
             <InfoWindow onCloseClick={() => setCurrentStop(null)}>
                 <div>
                     <h2 className={css.stop_name}>
                         {currentStop.name}
-                        {currentRoute &&
-                        <span className={css.show_routes}
-                              onClick={() => setCurrentRoute(null)}>Показать маршруты</span>}
+                        {currentRoute
+                            ? <span className={css.show_routes}
+                              onClick={() => setCurrentRoute(null)}>Показать маршруты</span>
+                            : <span className={css.build_route}
+                              onClick={() => buildRoute(currentStop)}>Построить маршрут</span>}
                     </h2>
                     {!currentRoute && showRoutes(currentStop)}
                     {currentRoute && showTimes(currentStop)}
