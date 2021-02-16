@@ -1,5 +1,5 @@
 import {COORD_MEASURE, STOP_COORDS_INDEX, STOP_ID_INDEX, STOP_INFO_LENGTH, STOP_NAME_INDEX} from "../constants";
-import {splitData} from "./globalLogic";
+import {splitData} from "./common";
 
 export const getStopMarkerData = (stopsTxt) => {
     const splitStopsData = splitData(stopsTxt);

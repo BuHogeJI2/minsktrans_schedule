@@ -10,9 +10,10 @@ import {
     MINSK_COORDS, UPPER_F_CHAR_CODE,
 } from "../../constants";
 import Directions from "./Directions";
-import {getStopMarkerData} from "../../logic/stopsLogic";
-import {getTimes} from "../../logic/timesLogic";
+import {getStopMarkerData} from "../../services/stops";
+import {getTimes} from "../../services/times";
 import MarkersContainer from "./Markers/MarkersContainer";
+import Clock from "../clock/Clock";
 
 
 const Map = ({stopsTxt, routesTxt, timesTxt}) => {
@@ -46,7 +47,8 @@ const Map = ({stopsTxt, routesTxt, timesTxt}) => {
 
     return (
         <div>
-            <OpenSearchFormButton/>
+            <OpenSearchFormButton />
+            <Clock />
             <GoogleMap defaultZoom={MAP_ZOOM}
                        defaultOptions={{styles: mapStyle}}
                        defaultCenter={MINSK_COORDS}>

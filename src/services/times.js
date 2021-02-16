@@ -39,8 +39,7 @@ export const getTimesForStopWithRoute = (stopNumberInRoutes, timesForRoutes) => 
         const startTimesForStop = numberOfStop >= 0 && numberOfStop * timesInRoute.workdays.length;
         const endTimesForStop = startTimesForStop + timesInRoute.workdays.length;
 
-        if (startTimesForStop >= 0) timesForStopWithRoute[routeId] = timesInRoute.times.slice(startTimesForStop, endTimesForStop);
-        else timesForStopWithRoute[routeId] = false;
+        timesForStopWithRoute[routeId] = startTimesForStop >= 0 && timesInRoute.times.slice(startTimesForStop, endTimesForStop);
     }
 
     return timesForStopWithRoute;

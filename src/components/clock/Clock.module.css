@@ -1,0 +1,15 @@
+.clock_wrapper {
+    position: fixed;
+    top: 10px;
+    right: 70px;
+}
+
+.clock {
+    padding: 10px;
+    background: white;
+    border: none;
+    border-radius: 2px;
+    box-shadow: 0 0 2px grey;
+    font-size: 16px;
+    user-select: none;
+}

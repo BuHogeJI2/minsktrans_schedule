@@ -6,7 +6,7 @@ import {
     STOP_ID_INDEX,
     STOP_NAME_INDEX
 } from "../constants";
-import {splitData} from "./globalLogic";
+import {splitData} from "./common";
 
 export const getSearchingRoutes = (request, routesTxt, stopsTxt) => {
     const routes = splitData(routesTxt);

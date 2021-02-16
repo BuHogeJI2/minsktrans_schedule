@@ -1,7 +1,7 @@
 import React, {useState} from 'react'
 import css from "./Form.module.css";
 import {ROUTE_NAME_INDEX} from "../../constants";
-import {getDirectionData, getSearchingRoutes, setDirectionsData} from "../../logic/routesLogic";
+import {getDirectionData, getSearchingRoutes, setDirectionsData} from "../../services/routes";
 
 const  SearchForm = ({stopsTxt, routesTxt, setDirections}) => {
 

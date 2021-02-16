@@ -2,14 +2,14 @@ import {InfoWindow} from "react-google-maps";
 import css from "../Map.module.css";
 import React from "react";
 import {useContextConsumer} from "./MarkersContainer";
-import {getDirectionData, getRoutesWithCurrentStop, setDirectionsData} from "../../../logic/routesLogic";
+import {getDirectionData, getRoutesWithCurrentStop, setDirectionsData} from "../../../services/routes";
 import {ROUTE_ID_INDEX, ROUTE_NAME_INDEX} from "../../../constants";
 import {
     convertMinutesToHours,
     getStopQueueOrderInRoutes,
     getTimesForRoutes,
     getTimesForStopWithRoute
-} from "../../../logic/timesLogic";
+} from "../../../services/times";
 
 const CustomInfoWindow = ({setCurrentStop, setCurrentRoute, marker, ...props}) => {
 
