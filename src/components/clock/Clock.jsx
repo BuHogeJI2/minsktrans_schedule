@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import css from './Clock.module.css'
 
-const Clock = (props) => {
+const Clock = () => {
 
     const [time, setTime] = useState('');
 

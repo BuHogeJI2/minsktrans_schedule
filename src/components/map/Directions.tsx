@@ -1,8 +1,13 @@
 import React from 'react';
 import waypointIcon from "../../assets/image/waypoint_icon.png";
 import {DirectionsRenderer} from "react-google-maps";
+import {DirectionType} from "../../bll/reducers/dynamicData";
 
-const Directions = (props) => {
+type DirectionsPropsType = {
+    directions: DirectionType
+}
+
+const Directions: React.FC<DirectionsPropsType> = (props) => {
 
     const DIRECTION_OPTIONS = {
         polylineOptions: {

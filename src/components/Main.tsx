@@ -22,7 +22,7 @@ const Main: React.FC<MainPropsType> = (props) => {
 
     useEffect(() => {
         props.fetchAllData();
-    }, [props])
+    }, [])
 
     return (
         <div className={css.map_wrapper}>

@@ -23,7 +23,7 @@ export type MarkerType = {
 }
 
 type staticDataStateType = {
-    markersData: Array<string>
+    markersData: Array<MarkerType>
     timesData: Array<TimeDataType>
 }
 

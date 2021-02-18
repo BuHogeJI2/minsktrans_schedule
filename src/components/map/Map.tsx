@@ -12,12 +12,12 @@ import {
 import Directions from "./Directions";
 import {getStopMarkerData} from "../../services/stops";
 import {getTimes} from "../../services/times";
-import MarkersContainer from "./Markers/MarkersContainer";
 import Clock from "../clock/Clock";
 import {connect} from "react-redux";
 import {MarkerType, setMarkersData, setTimesData, TimeDataType} from "../../bll/reducers/staticData";
-import {DirectionType, setDirections} from "../../bll/reducers/dynamicData";
+import {DirectionType, setCurrentRoute, setCurrentStop, setDirections} from "../../bll/reducers/dynamicData";
 import {AppStateType} from "../../bll/store";
+import Markers from "./Markers/Markers";
 
 type MapOwnPropsType = {
     stopsTxt: string
@@ -35,6 +35,8 @@ type MapDispatchPropsType = {
     setMarkersData: (markersData: Array<MarkerType>) => void
     setTimesData: (timesData: Array<TimeDataType>) => void
     setDirections: (direction: DirectionType) => void
+    setCurrentStop: (stop: MarkerType | null) => void
+    setCurrentRoute: (direction: Array<string> | null) => void
 }
 
 type MapPropsType = MapOwnPropsType & MapStatePropsType & MapDispatchPropsType;
@@ -78,10 +80,13 @@ const Map: React.FC<MapPropsType> = ({stopsTxt, routesTxt, timesTxt, ...props}) 
                                  maxZoom={CLUSTER.maxZoom}
                                  minimumClusterSize={CLUSTER.minimumSize}
                                  gridSize={CLUSTER.gridSize}>
-                    <MarkersContainer stopsMarkerData={props.markersData}
-                                      routesTxt={routesTxt}
-                                      stopsTxt={stopsTxt}
-                                      times={props.timesData}/>
+                    <Markers markersData={props.markersData}
+                             routesTxt={routesTxt}
+                             stopsTxt={stopsTxt}
+                             setDirections={props.setDirections}
+                             setCurrentStop={props.setCurrentStop}
+                             setCurrentRoute={props.setCurrentRoute}
+                             times={props.timesData}/>
                 </MarkerClusterer>
                 {props.directions && <Directions directions={props.directions}/>}
             </GoogleMap>
@@ -101,5 +106,7 @@ let mapStateToProps = (state: AppStateType): MapStatePropsType => {
 export default connect(mapStateToProps, {
     setMarkersData,
     setTimesData,
-    setDirections
+    setDirections,
+    setCurrentStop,
+    setCurrentRoute
 })(withScriptjs(withGoogleMap(Map)));
