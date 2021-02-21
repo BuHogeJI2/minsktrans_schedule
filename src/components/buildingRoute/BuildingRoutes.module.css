@@ -1,0 +1,35 @@
+.building_route_wrapper {
+    position: fixed;
+    top: 10px;
+    left: 40%;
+
+}
+
+.building_route_block {
+    padding: 10px;
+    background: white;
+    border: none;
+    border-radius: 2px;
+    box-shadow: 0 0 2px grey;
+    font-size: 16px;
+    user-select: none;
+
+
+    display: flex;
+    flex-direction: row;
+}
+
+.build_btn, .not_active_build_btn {
+    margin-left: 10px;
+    width: 75px;
+    height: 75px;
+    border: 1px solid lightgray;
+}
+
+.build_btn:hover {
+    cursor: pointer;
+}
+
+.build_btn > img, .not_active_build_btn > img {
+    width: 100%;
+}

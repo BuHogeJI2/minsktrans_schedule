@@ -1,6 +1,6 @@
 import {InfoWindow} from "react-google-maps";
 import css from "../Map.module.css";
-import React from "react";
+import React, {useState} from "react";
 import {getDirectionData, getRoutesWithCurrentStop, setDirectionsData} from "../../../services/routes";
 import {ROUTE_ID_INDEX, ROUTE_NAME_INDEX} from "../../../constants";
 import {
@@ -10,9 +10,10 @@ import {
     getTimesForStopWithRoute
 } from "../../../services/times";
 import {MarkerType, TimeDataType} from "../../../bll/reducers/staticData";
-import {DirectionType} from "../../../bll/reducers/dynamicData";
+import {addPointInBuildingRoute, DirectionType} from "../../../bll/reducers/dynamicData";
 import {connect} from "react-redux";
 import {AppStateType} from "../../../bll/store";
+import drop_route from '../../../assets/image/drop_route.png';
 
 type CustomInfoWindowOwnPropsType = {
     marker: MarkerType
@@ -29,7 +30,14 @@ type CustomInfoWindowStatePropsType = {
     currentRoute: Array<string> | null
 }
 
-type CustomInfoWindowPropsType = CustomInfoWindowOwnPropsType & CustomInfoWindowStatePropsType;
+type CustomInfoWindowDispatchPropsType = {
+    addPointInBuildingRoute: (point: MarkerType | null) => void
+}
+
+type CustomInfoWindowPropsType =
+    CustomInfoWindowOwnPropsType
+    & CustomInfoWindowStatePropsType
+    & CustomInfoWindowDispatchPropsType;
 
 const CustomInfoWindow: React.FC<CustomInfoWindowPropsType> = (props) => {
 
@@ -70,7 +78,8 @@ const CustomInfoWindow: React.FC<CustomInfoWindowPropsType> = (props) => {
     }
 
     const buildRoute = (currentStop: MarkerType | null) => {
-        console.log(currentStop);
+        props.addPointInBuildingRoute(currentStop);
+
     }
 
     return <>
@@ -81,9 +90,13 @@ const CustomInfoWindow: React.FC<CustomInfoWindowPropsType> = (props) => {
                         {props.currentStop.name}
                         {props.currentRoute
                             ? <span className={css.show_routes}
-                              onClick={() => props.setCurrentRoute(null)}>Показать маршруты</span>
-                            : <span className={css.build_route}
-                              onClick={() => buildRoute(props.currentStop)}>Построить маршрут</span>}
+                                    onClick={() => props.setCurrentRoute(null)}>Показать маршруты</span>
+                            : <div><span className={css.build_route}
+                                    onClick={() => buildRoute(props.currentStop)}>Построить маршрут</span>
+                                <span className={css.drop_route} onClick={() => buildRoute(null)}><img src={drop_route} alt=""/></span>
+                            </div>
+
+                        }
                     </h2>
                     {!props.currentRoute && showRoutes(props.currentStop)}
                     {props.currentRoute && showTimes(props.currentStop)}
@@ -99,4 +112,4 @@ let mapStateToProps = (state: AppStateType) => {
     }
 }
 
-export default connect(mapStateToProps, {})(CustomInfoWindow);
+export default connect(mapStateToProps, {addPointInBuildingRoute})(CustomInfoWindow);

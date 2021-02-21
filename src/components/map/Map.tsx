@@ -18,6 +18,7 @@ import {MarkerType, setMarkersData, setTimesData, TimeDataType} from "../../bll/
 import {DirectionType, setCurrentRoute, setCurrentStop, setDirections} from "../../bll/reducers/dynamicData";
 import {AppStateType} from "../../bll/store";
 import Markers from "./Markers/Markers";
+import BuildingRoute from "../buildingRoute/BuildingRoute";
 
 type MapOwnPropsType = {
     stopsTxt: string
@@ -29,6 +30,7 @@ type MapStatePropsType = {
     markersData: Array<MarkerType>
     timesData: Array<TimeDataType>
     directions: DirectionType
+    pointsInBuildingRoute: Array<MarkerType | null>
 }
 
 type MapDispatchPropsType = {
@@ -70,6 +72,7 @@ const Map: React.FC<MapPropsType> = ({stopsTxt, routesTxt, timesTxt, ...props}) 
 
     return (
         <div>
+            <BuildingRoute pointsInBuildingRoute={props.pointsInBuildingRoute} />
             <OpenSearchFormButton/>
             <Clock/>
             <GoogleMap defaultZoom={MAP_ZOOM}
@@ -100,6 +103,7 @@ let mapStateToProps = (state: AppStateType): MapStatePropsType => {
         markersData: state.staticData.markersData,
         timesData: state.staticData.timesData,
         directions: state.dynamicData.directions,
+        pointsInBuildingRoute: state.dynamicData.pointsInBuildingRoute
     }
 }
 
