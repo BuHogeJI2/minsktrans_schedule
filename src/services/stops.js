@@ -23,3 +23,28 @@ export const getStopMarkerData = (stopsTxt) => {
         }
     }).filter(item => !!item);
 }
+
+export const getStopDataByStopId = (stopId, stopsTxt) => {
+    const splitStopsData = splitData(stopsTxt);
+    let stopData;
+    splitStopsData.forEach(stopInfo => {
+        if (stopInfo.length === STOP_INFO_LENGTH) {
+            if (stopInfo[STOP_ID_INDEX] === stopId) {
+
+                const stopCoords = {
+                    lat: +stopInfo[STOP_COORDS_INDEX.lat] / COORD_MEASURE,
+                    lng: +stopInfo[STOP_COORDS_INDEX.lng] / COORD_MEASURE
+                }
+                const stopId = stopInfo[STOP_ID_INDEX]
+                const stopName = stopInfo[STOP_NAME_INDEX];
+
+                stopData = {
+                    id: stopId,
+                    name: stopName,
+                    position: stopCoords
+                }
+            }
+        }
+    })
+    return stopData;
+}

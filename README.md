@@ -12,8 +12,5 @@
     - show schedule at the stop with specific route;
     - searching route by route and stop name;
     - show finded route on map;
+    - building route from point A to point B (choosing in InfoWindow) with considering time;
     - changed map style;
-
-###### Bugs:
-    - don't show schedule by day of the week;
-    - don't hide old route after draw new;

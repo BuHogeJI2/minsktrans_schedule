@@ -49,7 +49,7 @@ const CustomInfoWindow: React.FC<CustomInfoWindowPropsType> = (props) => {
     const showRoutes = (currentStop: MarkerType | null) => {
         const routes = getRoutesWithCurrentStop(currentStop, props.routesTxt);
         return routes.map(route => {
-            return <div className={css.routeWithStop}>
+            return <div className={css.routeWithStop} key={route[ROUTE_ID_INDEX]}>
                 <span className={css.route_name_in_routes}
                       onClick={() => renderDirection(route)}>{route[ROUTE_NAME_INDEX]}</span>
                 <span className={css.show_times} onClick={() => props.setCurrentRoute(route)}>Показать расписание</span>
@@ -79,7 +79,6 @@ const CustomInfoWindow: React.FC<CustomInfoWindowPropsType> = (props) => {
 
     const buildRoute = (currentStop: MarkerType | null) => {
         props.addPointInBuildingRoute(currentStop);
-
     }
 
     return <>

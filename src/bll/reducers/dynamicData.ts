@@ -4,6 +4,8 @@ const SET_DIRECTIONS = 'dynamicData/SET_DIRECTIONS';
 const SET_CURRENT_STOP = 'dynamicData/SET_CURRENT_STOP';
 const SET_CURRENT_ROUTE = 'dynamicData/SET_CURRENT_ROUTE';
 const ADD_POINT_IN_BUILDING_ROUTE = 'dynamicData/ADD_POINT_IN_BUILDING_ROUTE';
+const ADD_DIRECTION_A_OF_BUILDING_ROUTE = 'dynamicData/ADD_DIRECTION_A_OF_BUILDING_ROUTE';
+const ADD_DIRECTION_B_OF_BUILDING_ROUTE = 'dynamicData/ADD_DIRECTION_B_OF_BUILDING_ROUTE';
 
 export type DirectionType = {
     geocoded_waypoints: Array<any>
@@ -23,7 +25,7 @@ let dynamicDataInitialState = {
     directions: null,
     currentStop: null,
     currentRoute: null,
-    pointsInBuildingRoute: []
+    pointsInBuildingRoute: [],
 }
 
 const dynamicData = (state: dynamicDataType = dynamicDataInitialState, action: any) => {
@@ -63,8 +65,6 @@ const dynamicData = (state: dynamicDataType = dynamicDataInitialState, action: a
                     pointsInBuildingRoute: [...state.pointsInBuildingRoute, action.point]
                 }
             }
-
-
         }
 
         default: {

@@ -65,6 +65,7 @@ export const getDirectionData = (route, stopsTxt) => {
         })
     })
 
+    console.log(stopsInRoute)
     const waypointsStops = stopsInRoute.slice(1, -2); // except first and last stop;
     let waypointsObjects = waypointsStops.map(stop => {
         return {
@@ -85,6 +86,15 @@ export const getDirectionData = (route, stopsTxt) => {
             lng: +stopsInRoute[stopsInRoute.length - 1][STOP_COORDS_INDEX.lng] / COORD_MEASURE
         },
         waypoints: waypointsObjects
+    }
+}
+
+export const makeDirectionFormat = (origin, destination, waypoints) => {
+
+    return {
+        origin: origin.position,
+        destination: destination.position,
+        waypoints: waypoints
     }
 }
 

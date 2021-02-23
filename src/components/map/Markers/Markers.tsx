@@ -3,7 +3,7 @@ import {Marker} from "react-google-maps";
 import stopIcon from '../../../assets/image/stop_icon.png'
 import {STOP_ICON_HEIGHT, STOP_ICON_WIDTH} from "../../../constants";
 import CustomInfoWindow from "./CustomInfoWindow";
-import {MarkerType, setMarkersData, TimeDataType} from "../../../bll/reducers/staticData";
+import {MarkerType, TimeDataType} from "../../../bll/reducers/staticData";
 import {DirectionType} from "../../../bll/reducers/dynamicData";
 
 type MarkersOwnPropsType = {
