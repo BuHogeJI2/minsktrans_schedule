@@ -10,7 +10,11 @@ import {
     getTimesForStopWithRoute
 } from "../../../services/times";
 import {MarkerType, TimeDataType} from "../../../bll/reducers/staticData";
-import {addPointInBuildingRoute, DirectionType} from "../../../bll/reducers/dynamicData";
+import {
+    addPointInBuildingRoute,
+    DirectionType,
+    setIsShowingBuildingRouteResult
+} from "../../../bll/reducers/dynamicData";
 import {connect} from "react-redux";
 import {AppStateType} from "../../../bll/store";
 import drop_route from '../../../assets/image/drop_route.png';
@@ -32,6 +36,7 @@ type CustomInfoWindowStatePropsType = {
 
 type CustomInfoWindowDispatchPropsType = {
     addPointInBuildingRoute: (point: MarkerType | null) => void
+    setIsShowingBuildingRouteResult: (isShowing: boolean) => void
 }
 
 type CustomInfoWindowPropsType =
@@ -78,7 +83,9 @@ const CustomInfoWindow: React.FC<CustomInfoWindowPropsType> = (props) => {
     }
 
     const buildRoute = (currentStop: MarkerType | null) => {
+        !currentStop && props.setIsShowingBuildingRouteResult(false);
         props.addPointInBuildingRoute(currentStop);
+
     }
 
     return <>
@@ -107,8 +114,8 @@ const CustomInfoWindow: React.FC<CustomInfoWindowPropsType> = (props) => {
 let mapStateToProps = (state: AppStateType) => {
     return {
         currentStop: state.dynamicData.currentStop,
-        currentRoute: state.dynamicData.currentRoute
+        currentRoute: state.dynamicData.currentRoute,
     }
 }
 
-export default connect(mapStateToProps, {addPointInBuildingRoute})(CustomInfoWindow);
+export default connect(mapStateToProps, {addPointInBuildingRoute, setIsShowingBuildingRouteResult})(CustomInfoWindow);

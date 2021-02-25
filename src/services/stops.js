@@ -45,6 +45,7 @@ export const getStopDataByStopId = (stopId, stopsTxt) => {
                 }
             }
         }
-    })
+    });
+
     return stopData;
 }

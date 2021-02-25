@@ -6,6 +6,7 @@ const SET_CURRENT_ROUTE = 'dynamicData/SET_CURRENT_ROUTE';
 const ADD_POINT_IN_BUILDING_ROUTE = 'dynamicData/ADD_POINT_IN_BUILDING_ROUTE';
 const ADD_DIRECTION_A_OF_BUILDING_ROUTE = 'dynamicData/ADD_DIRECTION_A_OF_BUILDING_ROUTE';
 const ADD_DIRECTION_B_OF_BUILDING_ROUTE = 'dynamicData/ADD_DIRECTION_B_OF_BUILDING_ROUTE';
+const SET_IS_SHOWING_BUILDING_ROUTE_RESULT = 'dynamicData/SET_IS_SHOWING_BUILDING_ROUTE_RESULT';
 
 export type DirectionType = {
     geocoded_waypoints: Array<any>
@@ -19,6 +20,7 @@ export type dynamicDataType = {
     currentStop: MarkerType | null
     currentRoute: Array<string> | null
     pointsInBuildingRoute: Array<MarkerType | null>
+    isShowingBuildingRouteResult: boolean
 }
 
 let dynamicDataInitialState = {
@@ -26,6 +28,7 @@ let dynamicDataInitialState = {
     currentStop: null,
     currentRoute: null,
     pointsInBuildingRoute: [],
+    isShowingBuildingRouteResult: false
 }
 
 const dynamicData = (state: dynamicDataType = dynamicDataInitialState, action: any) => {
@@ -67,6 +70,13 @@ const dynamicData = (state: dynamicDataType = dynamicDataInitialState, action: a
             }
         }
 
+        case SET_IS_SHOWING_BUILDING_ROUTE_RESULT: {
+            return {
+                ...state,
+                isShowingBuildingRouteResult: action.isShowing
+            }
+        }
+
         default: {
             return state;
         }
@@ -76,7 +86,11 @@ const dynamicData = (state: dynamicDataType = dynamicDataInitialState, action: a
 export const setDirections = (direction: DirectionType) => ({type: SET_DIRECTIONS, direction});
 export const setCurrentStop = (currentStop: MarkerType | null) => ({type: SET_CURRENT_STOP, currentStop});
 export const setCurrentRoute = (currentRoute: Array<string> | null) => ({type: SET_CURRENT_ROUTE, currentRoute});
-export const addPointInBuildingRoute = (point: MarkerType | null) => ({type: ADD_POINT_IN_BUILDING_ROUTE, point})
+export const addPointInBuildingRoute = (point: MarkerType | null) => ({type: ADD_POINT_IN_BUILDING_ROUTE, point});
+export const setIsShowingBuildingRouteResult = (isShowing: boolean) => ({
+    type: SET_IS_SHOWING_BUILDING_ROUTE_RESULT,
+    isShowing
+})
 
 
 export default dynamicData;

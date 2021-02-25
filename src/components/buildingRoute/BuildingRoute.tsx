@@ -1,8 +1,5 @@
 import React, {useState} from "react";
 import {MarkerType} from "../../bll/reducers/staticData";
-import css from './BuildingRoutes.module.css';
-import accept_route from '../../assets/image/accept_route.png';
-import not_active_accept_route from '../../assets/image/not_active_accept_route.png';
 import {connect} from "react-redux";
 import {AppStateType} from "../../bll/store";
 import {getRoutesWithCurrentStop, makeDirectionFormat, setDirectionsData} from "../../services/routes";
@@ -11,9 +8,10 @@ import {
     getMatchingStopsInRoutes,
     getPossibleRoutes
 } from "../../services/buildRoute";
-import {DirectionType} from "../../bll/reducers/dynamicData";
+import {DirectionType, setIsShowingBuildingRouteResult} from "../../bll/reducers/dynamicData";
 import {getStopDataByStopId} from "../../services/stops";
-import {ROUTE_NAME_INDEX} from "../../constants";
+import BuildingRouteResult from "./BuildingRouteResult";
+import BuildingRoutePoints from "./BuildingRoutePoints";
 
 type BuildingRouteOwnPropsType = {
     stopsTxt: string
@@ -21,11 +19,16 @@ type BuildingRouteOwnPropsType = {
     setDirections: (direction: DirectionType) => void
 }
 
-type BuildingRouteStatePropsType = {
-    pointsInBuildingRoute: Array<MarkerType | null>
+type BuildingRouteDispatchPropsType = {
+    setIsShowingBuildingRouteResult: (isShowing: boolean) => void
 }
 
-type BuildingRoutePropsType = BuildingRouteOwnPropsType & BuildingRouteStatePropsType;
+type BuildingRouteStatePropsType = {
+    pointsInBuildingRoute: Array<MarkerType | null>
+    isShowingBuildingRouteResult: boolean
+}
+
+type BuildingRoutePropsType = BuildingRouteOwnPropsType & BuildingRouteStatePropsType & BuildingRouteDispatchPropsType;
 
 const BuildingRoute: React.FC<BuildingRoutePropsType> = (props) => {
 
@@ -42,6 +45,7 @@ const BuildingRoute: React.FC<BuildingRoutePropsType> = (props) => {
     }
 
     const renderRoutesOfPoints = (points) => {
+        props.setIsShowingBuildingRouteResult(true);
         const pointA = points[0];
         const pointB = points[1];
         const pointARoutes = getRoutesWithCurrentStop(pointA, props.routesTxt);
@@ -71,62 +75,27 @@ const BuildingRoute: React.FC<BuildingRoutePropsType> = (props) => {
     }
 
     return (
-        <>
-            {buildAPoint && buildBPoint && props.pointsInBuildingRoute.length &&
-            <div className={css.building_route_wrapper}>
-                <div className={css.building_route_block}>
-                    <div className={css.building_route_points}>
-                        <div className={css.point_A}>
-                            точка А: {buildAPoint.name} (По маршруту: {buildRoutes[0][ROUTE_NAME_INDEX]})
-                        </div>
-                        <hr/>
-                        {buildWaypoint &&
-                        <div>
-                            <div className={css.point_A}>
-                                Пересадка: {buildWaypoint.name}
-                            </div>
-                            <hr/>
-                        </div>
-                        }
-                        <div className={css.point_B}>
-                            точка
-                            Б: {buildBPoint.name} {buildRoutes.length > 1 && <span>(По маршруту: {buildRoutes[1][ROUTE_NAME_INDEX]})</span>}
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <div>
+            {props.isShowingBuildingRouteResult && buildAPoint && buildBPoint &&
+            <BuildingRouteResult buildAPoint={buildAPoint}
+                                 buildBPoint={buildBPoint}
+                                 buildWaypoint={buildWaypoint}
+                                 buildRoutes={buildRoutes}
+                                 setIsShowingBuildingRouteResult={props.setIsShowingBuildingRouteResult}/>
             }
-            {props.pointsInBuildingRoute.length && !buildBPoint && !buildAPoint &&
-            <div className={css.building_route_wrapper}>
-                <div className={css.building_route_block}>
-                    <div className={css.building_route_points}>
-                        <div className={css.point_A}>
-                            точка А: {props.pointsInBuildingRoute[0]?.name}
-                        </div>
-                        <hr/>
-                        <div className={css.point_B}>
-                            точка Б: {props.pointsInBuildingRoute[1]?.name}
-                        </div>
-                    </div>
-                    {props.pointsInBuildingRoute.length == 2 && props.pointsInBuildingRoute[0] !== props.pointsInBuildingRoute[1]
-                        ? <div className={css.build_btn} onClick={() => renderRoutesOfPoints(props.pointsInBuildingRoute)}>
-                            <img src={accept_route} alt=""/>
-                        </div>
-                        : <div className={css.not_active_build_btn}>
-                            <img src={not_active_accept_route} alt=""/>
-                        </div>
-                    }
-                </div>
-            </div>
+            {props.pointsInBuildingRoute.length && !props.isShowingBuildingRouteResult &&
+            <BuildingRoutePoints pointsInBuildingRoute={props.pointsInBuildingRoute}
+                                 renderRoutesOfPoints={renderRoutesOfPoints}/>
             }
-        </>
+        </div>
     )
 }
 
 let mapStateToProps = (state: AppStateType): BuildingRouteStatePropsType => {
     return {
         pointsInBuildingRoute: state.dynamicData.pointsInBuildingRoute,
+        isShowingBuildingRouteResult: state.dynamicData.isShowingBuildingRouteResult,
     }
 }
 
-export default connect(mapStateToProps, {})(BuildingRoute);
+export default connect(mapStateToProps, {setIsShowingBuildingRouteResult})(BuildingRoute);

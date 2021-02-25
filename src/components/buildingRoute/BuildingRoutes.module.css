@@ -1,11 +1,13 @@
 .building_route_wrapper {
     position: fixed;
-    top: 10px;
-    left: 300px;
+    top: 170px;
+    left: 10px;
 
 }
 
 .building_route_block {
+    overflow: hidden;
+    max-width: 300px;
     padding: 10px;
     background: white;
     border: none;
@@ -13,23 +15,53 @@
     box-shadow: 0 0 2px grey;
     font-size: 16px;
     user-select: none;
-
-
-    display: flex;
-    flex-direction: row;
 }
 
-.build_btn, .not_active_build_btn {
-    margin-left: 10px;
+.build_btn {
+    margin: 15px auto;
     width: 75px;
     height: 75px;
-    border: 1px solid lightgray;
 }
 
-.build_btn:hover {
+.build_btn_close {
+    margin-top: 10px;
+    width: 20px;
+    height: 20px;
+    float: right;
+}
+
+.arrows_block {
+    margin: 15px auto;
+    width: 40px;
+    height: 40px;
+}
+
+.build_btn:hover, .build_btn_close:hover {
     cursor: pointer;
 }
 
-.build_btn > img, .not_active_build_btn > img {
+.build_btn > img, .build_btn_close > img, .arrows_block > img {
     width: 100%;
+}
+
+.point_block {
+    display: flex;
+    flex-direction: column;
+}
+
+.point_word {
+    text-align: center;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.point_name {
+    font-size: 16px;
+    font-weight: 700;
+    text-align: center;
+}
+
+.point_route {
+    font-size: 14px;
+    text-align: center;
 }

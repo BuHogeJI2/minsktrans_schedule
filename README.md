@@ -1,6 +1,6 @@
 ### This is react application with google map which shows public transport's stops in Minsk
 
-##### Link on web page: [Click here](https://minsktrans-schedule-qeocf.ondigitalocean.app) 
+##### Link on web page: [Click here](https://minsktrans-schedule-8cbc2.ondigitalocean.app/) 
 
 ##### Hotkeys:
     - Shift+f - open modal search window;
